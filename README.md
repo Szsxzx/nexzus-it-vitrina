@@ -1,3 +1,6 @@
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9b5d7b16-0fad-4219-ba5a-19b8f705c8d2" />
+
 # Carnicería Fuente de Vida / INCODOL
 
 Sitio web público + panel administrativo completo.
