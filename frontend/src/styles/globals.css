@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --rojo: #8B0000;
+  --azul: #3AA8C1;
+  --crema: #faf8f5;
+  --negro: #0f0f0f;
+}
+
+html, body {
+  background: var(--crema);
+  color: #2a2a2a;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }
+
+/* Scroll suave */
+html { scroll-behavior: smooth; }

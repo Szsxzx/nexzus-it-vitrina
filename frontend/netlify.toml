@@ -1,0 +1,16 @@
+[build]
+  base    = "frontend"
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Redirige todo al Next.js app
+[[redirects]]
+  from   = "/*"
+  to     = "/.netlify/functions/___netlify-handler"
+  status = 200

@@ -1,0 +1,18 @@
+# ─── Netlify — INCODOL Frontend (Next.js 14) ──────────────────────────────────
+# Este archivo va en la raíz del repositorio.
+# El backend (FastAPI) se despliega por separado en Render.com
+
+[build]
+  base    = "frontend"          # Netlify solo procesa la carpeta frontend/
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Variables de entorno — configúralas en el dashboard de Netlify:
+#   NEXT_PUBLIC_API_URL   → URL del backend en Render (ej: https://incodol-api.onrender.com)
+#   NEXT_PUBLIC_WPP_NUMBER → número de WhatsApp (573164013230)

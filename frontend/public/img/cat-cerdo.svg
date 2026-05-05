@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#6d1a3e"/>
+      <stop offset="100%" stop-color="#3a0020"/>
+    </radialGradient>
+    <linearGradient id="chop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e8a0a0"/>
+      <stop offset="40%" stop-color="#c0504a"/>
+      <stop offset="100%" stop-color="#8b2020"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <ellipse cx="400" cy="530" rx="300" ry="28" fill="#00000044"/>
+  <!-- Hueso chuleta -->
+  <rect x="370" y="60" width="32" height="340" rx="16" fill="#f0e0c0"/>
+  <ellipse cx="386" cy="55" rx="50" ry="42" fill="#f0e0c0"/>
+  <!-- Chuleta -->
+  <path d="M160 200 Q200 140 320 160 Q440 175 520 200 Q580 225 560 380 Q540 450 380 460 Q220 455 180 380 Q150 310 160 200Z" fill="url(#chop)"/>
+  <!-- Grasa exterior -->
+  <path d="M160 200 Q200 140 320 160 Q440 175 520 200 Q510 175 440 155 Q320 140 200 155 Q165 165 160 200Z" fill="#f5ddb0" opacity="0.85"/>
+  <!-- Vetas -->
+  <path d="M220 270 Q310 255 400 275 Q460 285 510 265" stroke="#f0c8a0" stroke-width="9" fill="none" stroke-linecap="round" opacity="0.6"/>
+  <path d="M210 330 Q300 315 400 335 Q455 345 510 325" stroke="#f0c8a0" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.4"/>
+</svg>

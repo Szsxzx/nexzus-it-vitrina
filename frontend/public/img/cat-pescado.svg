@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#004e6a"/>
+      <stop offset="100%" stop-color="#00202e"/>
+    </radialGradient>
+    <linearGradient id="filete" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f0c060"/>
+      <stop offset="40%" stop-color="#e8a030"/>
+      <stop offset="100%" stop-color="#c06810"/>
+    </linearGradient>
+    <linearGradient id="piel" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3aa8c1"/>
+      <stop offset="100%" stop-color="#1a6880"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <ellipse cx="400" cy="535" rx="295" ry="25" fill="#00000055"/>
+  <!-- Filete superior -->
+  <path d="M140 200 Q260 150 480 180 Q600 200 650 290 Q620 360 480 370 Q300 375 180 340 Q110 305 140 200Z" fill="url(#filete)"/>
+  <!-- Líneas de músculo -->
+  <path d="M200 230 Q320 210 470 235 Q550 248 610 280" stroke="#c07820" stroke-width="3" fill="none" opacity="0.5"/>
+  <path d="M185 265 Q310 245 470 270 Q555 283 615 315" stroke="#c07820" stroke-width="3" fill="none" opacity="0.5"/>
+  <path d="M185 300 Q310 282 468 305 Q550 318 610 348" stroke="#c07820" stroke-width="3" fill="none" opacity="0.4"/>
+  <path d="M200 335 Q320 318 465 338 Q540 350 595 375" stroke="#c07820" stroke-width="2" fill="none" opacity="0.3"/>
+  <!-- Piel -->
+  <path d="M140 200 Q260 150 480 180 Q490 168 480 158 Q340 138 230 158 Q165 172 140 200Z" fill="url(#piel)" opacity="0.9"/>
+  <!-- Brillo superficie -->
+  <ellipse cx="350" cy="250" rx="150" ry="50" fill="#ffffff" opacity="0.08"/>
+  <!-- Rodaja limón decorativa -->
+  <circle cx="630" cy="420" r="58" fill="#e8d060" opacity="0.9"/>
+  <circle cx="630" cy="420" r="50" fill="#f5e070"/>
+  <line x1="630" y1="372" x2="630" y2="468" stroke="#c8b030" stroke-width="2.5" opacity="0.7"/>
+  <line x1="582" y1="420" x2="678" y2="420" stroke="#c8b030" stroke-width="2.5" opacity="0.7"/>
+  <line x1="594" y1="386" x2="666" y2="454" stroke="#c8b030" stroke-width="2" opacity="0.5"/>
+  <line x1="594" y1="454" x2="666" y2="386" stroke="#c8b030" stroke-width="2" opacity="0.5"/>
+  <circle cx="630" cy="420" r="18" fill="#e8d060" opacity="0.8"/>
+</svg>
