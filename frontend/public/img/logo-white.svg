@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 90" role="img" aria-label="Carnicería Fuente de Vida">
-  <line x1="10" y1="22" x2="68" y2="22" stroke="#cc4444" stroke-width="0.8" opacity="0.8"/>
-  <line x1="212" y1="22" x2="270" y2="22" stroke="#cc4444" stroke-width="0.8" opacity="0.8"/>
+  <line x1="10" y1="22" x2="68" y2="22" stroke="#ffffff" stroke-width="0.8" opacity="0.6"/>
+  <line x1="212" y1="22" x2="270" y2="22" stroke="#ffffff" stroke-width="0.8" opacity="0.6"/>
 
   <text
     x="140" y="27"
@@ -8,8 +8,9 @@
     font-size="9"
     letter-spacing="4"
     text-anchor="middle"
-    fill="#cc4444"
+    fill="#ffffff"
     font-weight="400"
+    opacity="0.85"
   >· CARNICERÍA ·</text>
 
   <text
@@ -23,5 +24,5 @@
     font-style="italic"
   >Fuente de Vida</text>
 
-  <line x1="80" y1="74" x2="200" y2="74" stroke="#cc4444" stroke-width="0.6" opacity="0.6"/>
+  <line x1="80" y1="74" x2="200" y2="74" stroke="#ffffff" stroke-width="0.6" opacity="0.4"/>
 </svg>
