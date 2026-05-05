@@ -24,12 +24,12 @@ export default function ImageUpload({ value, onUpload, onClear }: Props) {
     setUploading(true);
     setError(null);
     const form = new FormData();
-    form.append("file", file);
+    form.append("image", file);
     try {
-      const res  = await fetch("/api/upload", { method: "POST", body: form });
+      const res  = await fetch("https://api.imgbb.com/1/upload?key=72a1d0d3410aaea9af7cc5b54277bb6e", { method: "POST", body: form });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Error al subir");
-      onUpload(data.url);
+      if (!data.success) throw new Error("Error al subir imagen");
+      onUpload(data.data.display_url);
     } catch (e: any) {
       setError(e.message);
     } finally {
