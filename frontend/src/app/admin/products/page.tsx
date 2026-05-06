@@ -314,7 +314,7 @@ export default function ProductsPage() {
               </Field>
               <Field label="Precio anterior" hint="Se muestra tachado">
                 <PriceInput
-                  value={editing?.old_price}
+                  value={editing?.old_price ?? undefined}
                   onChange={(v) => setEditing({ ...editing!, old_price: v })}
                 />
               </Field>
