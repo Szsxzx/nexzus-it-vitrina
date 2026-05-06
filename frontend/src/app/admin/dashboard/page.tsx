@@ -82,13 +82,14 @@ export default function DashboardPage() {
         )}
 
         {/* Quick links */}
-        <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {[
-            { href: "/admin/banner",     label: "Banner",       icon: "fa-image" },
-            { href: "/admin/promotions", label: "Promociones",  icon: "fa-percent" },
-            { href: "/admin/catalog",    label: "Catálogo",     icon: "fa-tags" },
-            { href: "/admin/recipes",    label: "Recetas",      icon: "fa-book-open" },
-            { href: "/admin/footer",     label: "Pie de página",icon: "fa-grip-lines" },
+            { href: "/admin/banner",       label: "Banner",         icon: "fa-image" },
+            { href: "/admin/promotions",  label: "Promociones",   icon: "fa-percent" },
+            { href: "/admin/catalog",     label: "Catálogo",      icon: "fa-tags" },
+            { href: "/admin/premium-cuts",label: "Cortes Premium", icon: "fa-cow" },
+            { href: "/admin/recipes",     label: "Recetas",       icon: "fa-book-open" },
+            { href: "/admin/footer",      label: "Pie de página", icon: "fa-grip-lines" },
           ].map((q) => (
             <a
               key={q.href}

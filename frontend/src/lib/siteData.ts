@@ -40,6 +40,26 @@ export interface CatalogCategory {
   image?: string;  // URL de imagen de portada
 }
 
+export interface PremiumSection {
+  id: string;
+  title: string;
+  icon: string;   // clase fa-*
+  color: string;  // clase bg-*
+}
+
+export interface PremiumCut {
+  id: string;
+  sectionId: string;
+  name: string;
+  price: string;
+  unitPrice: number;
+  origin: string;
+  img: string;
+  badge: string;
+  badgeColor: string;
+  text: string;
+}
+
 export interface FooterData {
   address: string;
   phone: string;
@@ -126,6 +146,21 @@ export const defaultCategories: CatalogCategory[] = [
   { id: "pescado",   label: "Cortes de Pescado", cssClass: "from-azul to-azul-dark",       image: "/img/cat-pescado.svg" },
 ];
 
+export const defaultPremiumSections: PremiumSection[] = [
+  { id: "res",   title: "Cortes de Res",   icon: "fa-cow",            color: "bg-rojo"   },
+  { id: "cerdo", title: "Cortes de Cerdo", icon: "fa-piggy-bank",     color: "bg-negro2" },
+  { id: "pollo", title: "Cortes de Pollo", icon: "fa-drumstick-bite", color: "bg-azul"   },
+];
+
+export const defaultPremiumCuts: PremiumCut[] = [
+  { id: "lomo-fino",     sectionId: "res",   name: "Lomo Fino Angus",  price: "$32.000/kg",      unitPrice: 32000, origin: "Origen: Argentina",    img: "/img/lomo-fino.jpg",       badge: "TOP VENTAS",  badgeColor: "bg-azul",   text: "Corte premium ideal para filetes, con marmoleo perfecto que garantiza terneza y sabor." },
+  { id: "tomahawk",      sectionId: "res",   name: "Tomahawk",         price: "$68.000/unidad",  unitPrice: 68000, origin: "Origen: Colombia",     img: "/img/tomahawk.jpg",        badge: "NUEVO",       badgeColor: "bg-rojo",   text: "Filete grueso con hueso, perfecto para parrilla. Peso aproximado 1.2kg por unidad." },
+  { id: "chuleta",       sectionId: "cerdo", name: "Chuleta de Cerdo", price: "$18.500/kg",      unitPrice: 18500, origin: "Origen: Antioquia",    img: "/img/chuleta-cerdo.jpg",   badge: "-15%",        badgeColor: "bg-rojo",   text: "Corte fresco y jugoso, ideal para asar o freír. Presentación en paquetes de 1kg." },
+  { id: "costillas-bbq", sectionId: "cerdo", name: "Costillas BBQ",    price: "$25.900/paquete", unitPrice: 25900, origin: "Origen: Valle",        img: "/img/costillas-bbq.jpg",   badge: "RECOMENDADO", badgeColor: "bg-azul",   text: "Paquete de costillas marinadas listas para la parrilla. Incluye salsa BBQ artesanal." },
+  { id: "pechuga",       sectionId: "pollo", name: "Pechuga de Pollo", price: "$12.900/bandeja", unitPrice: 12900, origin: "Origen: Santander",    img: "/img/pechuga-pollo.jpg",   badge: "ORGÁNICO",    badgeColor: "bg-negro2", text: "Pechuga deshuesada y sin piel, de crianza orgánica. Bandeja de 500g." },
+  { id: "alitas",        sectionId: "pollo", name: "Alitas Picantes",  price: "$15.500/paquete", unitPrice: 15500, origin: "Origen: Cundinamarca", img: "/img/alitas-picantes.jpg", badge: "ESPECIAL",    badgeColor: "bg-azul",   text: "Alitas marinadas en salsa picante artesanal, listas para hornear. Paquete de 1kg." },
+];
+
 export const defaultFooter: FooterData = {
   address: "Carrera 76 #20f-107, Barrio París, Medellín",
   phone: "316 401 3230",
@@ -139,11 +174,13 @@ export const defaultFooter: FooterData = {
 // ─── Helpers localStorage ─────────────────────────────────────────────────────
 
 const KEYS = {
-  banner:     "incodol_banner",
-  promos:     "incodol_promos",
-  blogs:      "incodol_blogs",
-  categories: "incodol_categories",
-  footer:     "incodol_footer",
+  banner:          "incodol_banner",
+  promos:          "incodol_promos",
+  blogs:           "incodol_blogs",
+  categories:      "incodol_categories",
+  footer:          "incodol_footer",
+  premiumSections: "incodol_premium_sections",
+  premiumCuts:     "incodol_premium_cuts",
 } as const;
 
 function load<T>(key: string, fallback: T): T {
@@ -164,21 +201,27 @@ function save<T>(key: string, data: T): void {
 // ─── API pública ──────────────────────────────────────────────────────────────
 
 export const siteData = {
-  getBanner:     (): BannerData         => load(KEYS.banner,     defaultBanner),
-  getPromos:     (): PromoItem[]        => load(KEYS.promos,     defaultPromos),
-  getBlogs:      (): BlogPost[]         => load(KEYS.blogs,      defaultBlogs),
-  getCategories: (): CatalogCategory[]  => load(KEYS.categories, defaultCategories),
-  getFooter:     (): FooterData         => load(KEYS.footer,     defaultFooter),
+  getBanner:          (): BannerData          => load(KEYS.banner,          defaultBanner),
+  getPromos:          (): PromoItem[]         => load(KEYS.promos,          defaultPromos),
+  getBlogs:           (): BlogPost[]          => load(KEYS.blogs,           defaultBlogs),
+  getCategories:      (): CatalogCategory[]   => load(KEYS.categories,      defaultCategories),
+  getFooter:          (): FooterData          => load(KEYS.footer,          defaultFooter),
+  getPremiumSections: (): PremiumSection[]    => load(KEYS.premiumSections, defaultPremiumSections),
+  getPremiumCuts:     (): PremiumCut[]        => load(KEYS.premiumCuts,     defaultPremiumCuts),
 
-  setBanner:     (d: BannerData)        => save(KEYS.banner,     d),
-  setPromos:     (d: PromoItem[])       => save(KEYS.promos,     d),
-  setBlogs:      (d: BlogPost[])        => save(KEYS.blogs,      d),
-  setCategories: (d: CatalogCategory[]) => save(KEYS.categories, d),
-  setFooter:     (d: FooterData)        => save(KEYS.footer,     d),
+  setBanner:          (d: BannerData)         => save(KEYS.banner,          d),
+  setPromos:          (d: PromoItem[])        => save(KEYS.promos,          d),
+  setBlogs:           (d: BlogPost[])         => save(KEYS.blogs,           d),
+  setCategories:      (d: CatalogCategory[])  => save(KEYS.categories,      d),
+  setFooter:          (d: FooterData)         => save(KEYS.footer,          d),
+  setPremiumSections: (d: PremiumSection[])   => save(KEYS.premiumSections, d),
+  setPremiumCuts:     (d: PremiumCut[])       => save(KEYS.premiumCuts,     d),
 
-  resetBanner:     () => localStorage.removeItem(KEYS.banner),
-  resetPromos:     () => localStorage.removeItem(KEYS.promos),
-  resetBlogs:      () => localStorage.removeItem(KEYS.blogs),
-  resetCategories: () => localStorage.removeItem(KEYS.categories),
-  resetFooter:     () => localStorage.removeItem(KEYS.footer),
+  resetBanner:          () => localStorage.removeItem(KEYS.banner),
+  resetPromos:          () => localStorage.removeItem(KEYS.promos),
+  resetBlogs:           () => localStorage.removeItem(KEYS.blogs),
+  resetCategories:      () => localStorage.removeItem(KEYS.categories),
+  resetFooter:          () => localStorage.removeItem(KEYS.footer),
+  resetPremiumSections: () => localStorage.removeItem(KEYS.premiumSections),
+  resetPremiumCuts:     () => localStorage.removeItem(KEYS.premiumCuts),
 };

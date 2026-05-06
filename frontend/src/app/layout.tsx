@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
+import HeroUIProvider from "@/components/HeroUIProvider";
 
 export const metadata: Metadata = {
   title: "Carnicería Fuente de Vida",
@@ -26,7 +27,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <HeroUIProvider>{children}</HeroUIProvider>
+      </body>
     </html>
   );
 }

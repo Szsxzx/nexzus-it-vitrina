@@ -16,11 +16,12 @@ const navGroups = [
   {
     label: "Sitio Web",
     items: [
-      { href: "/admin/banner",     label: "Banner",        icon: "fa-image" },
-      { href: "/admin/catalog",    label: "Catálogo",      icon: "fa-tags" },
-      { href: "/admin/promotions", label: "Promociones",   icon: "fa-percent" },
-      { href: "/admin/recipes",    label: "Recetas",       icon: "fa-book-open" },
-      { href: "/admin/footer",     label: "Pie de página", icon: "fa-grip-lines" },
+      { href: "/admin/banner",        label: "Banner",           icon: "fa-image" },
+      { href: "/admin/catalog",       label: "Catálogo",         icon: "fa-tags" },
+      { href: "/admin/promotions",    label: "Promociones",      icon: "fa-percent" },
+      { href: "/admin/premium-cuts",  label: "Cortes Premium",   icon: "fa-cow" },
+      { href: "/admin/recipes",       label: "Recetas",          icon: "fa-book-open" },
+      { href: "/admin/footer",        label: "Pie de página",    icon: "fa-grip-lines" },
     ],
   },
   {
