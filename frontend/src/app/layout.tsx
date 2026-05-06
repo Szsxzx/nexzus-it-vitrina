@@ -2,14 +2,54 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import HeroUIProvider from "@/components/HeroUIProvider";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://vitrina-vs15.netlify.app";
+const SITE_NAME = "Carnicería Expendio Fuente de Vida";
+const SITE_DESC = "La mejor carne de Medellín — cortes premium 100% naturales, domicilios el mismo día. Res, cerdo, pollo y más.";
+
 export const metadata: Metadata = {
-  title: "Carnicería Fuente de Vida",
-  description: "La mejor carne de Medellín — 100% natural, calidad premium.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESC,
+  keywords: [
+    "carnicería Medellín", "carne premium", "cortes de res", "carne natural",
+    "domicilios carne Medellín", "carnicería Fuente de Vida", "carne de cerdo",
+    "pollo fresco", "embutidos artesanales", "carnicería Barrio París",
+  ],
+  authors: [{ name: "Fuente de Vida" }],
+  creator: "Carnicería Expendio Fuente de Vida",
   openGraph: {
-    title: "Carnicería Fuente de Vida",
-    description: "La mejor carne de Medellín — 100% natural, calidad premium.",
     type: "website",
     locale: "es_CO",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESC,
+    images: [
+      {
+        url: "/img/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Carnicería Fuente de Vida — Carne Premium Medellín",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESC,
+    images: ["/img/og-image.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
+  icons: {
+    icon: "/img/logo.svg",
+    apple: "/img/logo.svg",
   },
 };
 
@@ -23,8 +63,35 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=DM+Sans:wght@400;500;600;700&display=swap"
           rel="stylesheet"
+        />
+        {/* Schema.org — Local Business */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              "name": SITE_NAME,
+              "description": SITE_DESC,
+              "url": SITE_URL,
+              "telephone": "+57 316 401 3230",
+              "email": "contacto@fuentedevida.co",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Carrera 76 #20f-107, Barrio París",
+                "addressLocality": "Medellín",
+                "addressRegion": "Antioquia",
+                "addressCountry": "CO",
+              },
+              "openingHours": ["Mo-Sa 07:00-20:00", "Su 08:00-14:00"],
+              "servesCuisine": "Carnicería",
+              "priceRange": "$$",
+              "image": `${SITE_URL}/img/og-image.jpg`,
+              "sameAs": [],
+            }),
+          }}
         />
       </head>
       <body>

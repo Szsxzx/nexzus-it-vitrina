@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/useAuth";
-import AdminLayout from "@/components/AdminLayout";
+import { useAdminAuth } from "@/lib/AdminAuthContext";
 import {
   PageShell, PageHeader, ErrorBox, Badge,
   Table, Thead, Th, Tbody, Tr, Td, EmptyState,
@@ -11,7 +10,7 @@ import { api, loadToken, type ApiError } from "@/lib/api";
 import type { User } from "@/lib/types";
 
 export default function UsersPage() {
-  const { user, loading, logout } = useAuth();
+  const { user, logout } = useAdminAuth();
   const [users, setUsers] = useState<User[]>([]);
   const [err, setErr] = useState<string | null>(null);
 
@@ -39,11 +38,7 @@ export default function UsersPage() {
     }
   }
 
-  if (loading) return <div className="p-8 text-gray-400 text-sm">Cargando...</div>;
-  if (!user) return null;
-
   return (
-    <AdminLayout user={user} onLogout={logout}>
       <PageShell>
         <PageHeader
           title="Usuarios"
@@ -105,6 +100,5 @@ export default function UsersPage() {
           </Tbody>
         </Table>
       </PageShell>
-    </AdminLayout>
   );
 }

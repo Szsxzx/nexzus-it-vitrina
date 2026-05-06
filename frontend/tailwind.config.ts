@@ -1,10 +1,10 @@
 import type { Config } from "tailwindcss";
-import { heroui } from "@heroui/react";
+import { nextui } from "@nextui-org/react";
 
 const config: Config = {
   content: [
     "./src/**/*.{ts,tsx,js,jsx,mdx}",
-    "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
@@ -22,11 +22,11 @@ const config: Config = {
       },
       fontFamily: {
         sans:  ["DM Sans", "system-ui", "sans-serif"],
-        serif: ["Playfair Display", "serif"],
+        serif: ["Cormorant Garamond", "serif"],
       },
     },
   },
   darkMode: "class",
-  plugins: [heroui()],
+  plugins: [nextui()],
 };
 export default config;

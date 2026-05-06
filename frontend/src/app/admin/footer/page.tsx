@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/useAuth";
-import AdminLayout from "@/components/AdminLayout";
+import { useAdminAuth } from "@/lib/AdminAuthContext";
 import {
   PageShell, PageHeader, Card, SavedToast,
   BtnPrimary, BtnSecondary,
@@ -10,7 +9,7 @@ import {
 import { siteData, defaultFooter, type FooterData } from "@/lib/siteData";
 
 export default function FooterPage() {
-  const { user, loading, logout } = useAuth();
+  const { user, logout } = useAdminAuth();
   const [form, setForm] = useState<FooterData>(defaultFooter);
   const [saved, setSaved] = useState(false);
 
@@ -29,11 +28,7 @@ export default function FooterPage() {
     setForm(defaultFooter);
   }
 
-  if (loading) return <div className="p-8 text-sm text-gray-400">Cargando...</div>;
-  if (!user) return null;
-
   return (
-    <AdminLayout user={user} onLogout={logout}>
       <PageShell>
         <PageHeader
           title="Pie de página"
@@ -161,6 +156,5 @@ export default function FooterPage() {
           </div>
         </div>
       </PageShell>
-    </AdminLayout>
   );
 }

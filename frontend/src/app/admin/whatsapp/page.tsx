@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/useAuth";
-import AdminLayout from "@/components/AdminLayout";
+import { useAdminAuth } from "@/lib/AdminAuthContext";
 import {
   PageShell, PageHeader, Card, SavedToast,
   BtnPrimary, BtnSecondary, Field, Input,
@@ -9,7 +8,7 @@ import {
 import { siteData } from "@/lib/siteData";
 
 export default function WhatsAppPage() {
-  const { user, loading, logout } = useAuth();
+  const { user, logout } = useAdminAuth();
   const [number, setNumber]   = useState("");
   const [saved, setSaved]     = useState(false);
   const [error, setError]     = useState<string | null>(null);
@@ -45,11 +44,7 @@ export default function WhatsAppPage() {
     ? `+${preview.slice(0, 2)} ${preview.slice(2, 5)} ${preview.slice(5, 8)} ${preview.slice(8)}`
     : "—";
 
-  if (loading) return <div className="p-8 text-sm text-gray-400">Cargando...</div>;
-  if (!user) return null;
-
   return (
-    <AdminLayout user={user} onLogout={logout}>
       <PageShell>
         <PageHeader
           title="WhatsApp de pedidos"
@@ -132,6 +127,5 @@ export default function WhatsAppPage() {
           </div>
         </div>
       </PageShell>
-    </AdminLayout>
   );
 }

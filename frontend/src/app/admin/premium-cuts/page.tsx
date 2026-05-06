@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/useAuth";
-import AdminLayout from "@/components/AdminLayout";
+import { useAdminAuth } from "@/lib/AdminAuthContext";
 import {
   PageShell, PageHeader, SavedToast, EmptyState,
   Table, Thead, Th, Tbody, Tr, Td,
@@ -63,7 +62,7 @@ const emptyCut = (sections: PremiumSection[]): PremiumCut => ({
 });
 
 export default function PremiumCutsPage() {
-  const { user, loading, logout } = useAuth();
+  const { user, logout } = useAdminAuth();
   const [sections, setSections] = useState<PremiumSection[]>([]);
   const [cuts, setCuts] = useState<PremiumCut[]>([]);
   const [saved, setSaved] = useState(false);
@@ -144,11 +143,7 @@ export default function PremiumCutsPage() {
     setSections(defaultPremiumSections); setCuts(defaultPremiumCuts); flash();
   }
 
-  if (loading) return <div className="p-8 text-sm text-gray-400">Cargando...</div>;
-  if (!user) return null;
-
   return (
-    <AdminLayout user={user} onLogout={logout}>
       <PageShell>
         <PageHeader
           title="Cortes Premium"
@@ -423,6 +418,5 @@ export default function PremiumCutsPage() {
         </Modal>
 
       </PageShell>
-    </AdminLayout>
   );
 }

@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/useAuth";
-import AdminLayout from "@/components/AdminLayout";
+import { useAdminAuth } from "@/lib/AdminAuthContext";
 import {
   PageShell, PageHeader, SavedToast, EmptyState,
   Table, Thead, Th, Tbody, Tr, Td,
@@ -26,7 +25,7 @@ const GRADIENT_OPTIONS = [
 const emptyCategory = (): CatalogCategory => ({ id: "", label: "", cssClass: "from-rojo to-rojo-mid" });
 
 export default function CatalogPage() {
-  const { user, loading, logout } = useAuth();
+  const { user, logout } = useAdminAuth();
   const [items, setItems] = useState<CatalogCategory[]>([]);
   const [editing, setEditing] = useState<CatalogCategory | null>(null);
   const [isNew, setIsNew] = useState(false);
@@ -71,11 +70,7 @@ export default function CatalogPage() {
     persist(arr);
   }
 
-  if (loading) return <div className="p-8 text-sm text-gray-400">Cargando...</div>;
-  if (!user) return null;
-
   return (
-    <AdminLayout user={user} onLogout={logout}>
       <PageShell>
         <PageHeader
           title="Catálogo — Categorías"
@@ -201,6 +196,5 @@ export default function CatalogPage() {
           </form>
         </Modal>
       </PageShell>
-    </AdminLayout>
   );
 }

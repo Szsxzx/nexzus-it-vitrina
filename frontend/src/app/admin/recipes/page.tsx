@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/useAuth";
-import AdminLayout from "@/components/AdminLayout";
+import { useAdminAuth } from "@/lib/AdminAuthContext";
 import {
   PageShell, PageHeader, SavedToast, Badge, EmptyState,
   Table, Thead, Th, Tbody, Tr, Td,
@@ -22,7 +21,7 @@ const emptyPost = (): BlogPost => ({
 });
 
 export default function RecipesPage() {
-  const { user, loading, logout } = useAuth();
+  const { user, logout } = useAdminAuth();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [editing, setEditing] = useState<BlogPost | null>(null);
   const [isNew, setIsNew] = useState(false);
@@ -68,11 +67,7 @@ export default function RecipesPage() {
     persist(arr);
   }
 
-  if (loading) return <div className="p-8 text-sm text-gray-400">Cargando...</div>;
-  if (!user) return null;
-
   return (
-    <AdminLayout user={user} onLogout={logout}>
       <PageShell>
         <PageHeader
           title="Recetas y Artículos"
@@ -249,6 +244,5 @@ export default function RecipesPage() {
           )}
         </Modal>
       </PageShell>
-    </AdminLayout>
   );
 }

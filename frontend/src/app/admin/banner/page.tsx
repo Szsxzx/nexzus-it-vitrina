@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/useAuth";
-import AdminLayout from "@/components/AdminLayout";
+import { useAdminAuth } from "@/lib/AdminAuthContext";
 import {
   PageShell, PageHeader, Card, SavedToast,
   BtnPrimary, BtnSecondary,
@@ -10,7 +9,7 @@ import {
 import { siteData, defaultBanner, type BannerData } from "@/lib/siteData";
 
 export default function BannerPage() {
-  const { user, loading, logout } = useAuth();
+  const { user, logout } = useAdminAuth();
   const [form, setForm] = useState<BannerData>(defaultBanner);
   const [saved, setSaved] = useState(false);
 
@@ -29,11 +28,7 @@ export default function BannerPage() {
     setForm(defaultBanner);
   }
 
-  if (loading) return <div className="p-8 text-sm text-gray-400">Cargando...</div>;
-  if (!user) return null;
-
   return (
-    <AdminLayout user={user} onLogout={logout}>
       <PageShell>
         <PageHeader
           title="Banner principal"
@@ -131,6 +126,5 @@ export default function BannerPage() {
           </div>
         </div>
       </PageShell>
-    </AdminLayout>
   );
 }
