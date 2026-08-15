@@ -2,30 +2,72 @@
 import { useEffect, useState } from "react";
 import { useAdminAuth } from "@/lib/AdminAuthContext";
 import {
-  PageShell, PageHeader, Card, SavedToast,
+  PageShell, PageHeader, Card, SavedToast, ErrorBox,
   BtnPrimary, BtnSecondary,
   Field, Input,
 } from "@/components/AdminUI";
-import { siteData, defaultBanner, type BannerData } from "@/lib/siteData";
+import { api, type ApiError } from "@/lib/api";
+
+interface BannerData {
+  subtitle: string;
+  title: string;
+  highlight: string;
+  ctaText: string;
+  ctaHref: string;
+}
+
+const defaultBanner: BannerData = {
+  subtitle: "La mejor carne de la ciudad",
+  title: "100% Natural",
+  highlight: "Carne Premium",
+  ctaText: "Ver catálogo",
+  ctaHref: "#products",
+};
+
+interface SettingsOut {
+  banner_subtitle: string; banner_title: string; banner_highlight: string;
+  banner_cta_text: string; banner_cta_href: string;
+}
+
+const toForm = (s: SettingsOut): BannerData => ({
+  subtitle: s.banner_subtitle, title: s.banner_title, highlight: s.banner_highlight,
+  ctaText: s.banner_cta_text, ctaHref: s.banner_cta_href,
+});
+const toPayload = (f: BannerData) => ({
+  banner_subtitle: f.subtitle, banner_title: f.title, banner_highlight: f.highlight,
+  banner_cta_text: f.ctaText, banner_cta_href: f.ctaHref,
+});
 
 export default function BannerPage() {
   const { user, logout } = useAdminAuth();
   const [form, setForm] = useState<BannerData>(defaultBanner);
   const [saved, setSaved] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
-  useEffect(() => { setForm(siteData.getBanner()); }, []);
+  useEffect(() => {
+    api.get<SettingsOut>("/settings").then((s) => setForm(toForm(s))).catch((e: ApiError) => setErr(e.detail));
+  }, []);
 
-  function handleSave(e: React.FormEvent) {
+  async function handleSave(e: React.FormEvent) {
     e.preventDefault();
-    siteData.setBanner(form);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
+    try {
+      const s = await api.patch<SettingsOut>("/settings", toPayload(form));
+      setForm(toForm(s));
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } catch (e) {
+      setErr((e as ApiError).detail);
+    }
   }
 
-  function handleReset() {
+  async function handleReset() {
     if (!confirm("¿Restaurar valores por defecto?")) return;
-    siteData.resetBanner();
-    setForm(defaultBanner);
+    try {
+      const s = await api.patch<SettingsOut>("/settings", toPayload(defaultBanner));
+      setForm(toForm(s));
+    } catch (e) {
+      setErr((e as ApiError).detail);
+    }
   }
 
   return (
@@ -44,6 +86,8 @@ export default function BannerPage() {
             </a>
           }
         />
+
+        <ErrorBox message={err} />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Formulario */}

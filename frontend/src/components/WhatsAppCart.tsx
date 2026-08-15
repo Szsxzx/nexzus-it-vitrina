@@ -1,8 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "@/lib/cart";
 import { api } from "@/lib/api";
-import { siteData } from "@/lib/siteData";
 
 const fmtCOP = new Intl.NumberFormat("es-CO", {
   style: "currency", currency: "COP", maximumFractionDigits: 0,
@@ -31,6 +30,13 @@ export default function WhatsAppCart() {
   const [phone, setPhone]       = useState("");
   const [notes, setNotes]       = useState("");
   const [btnHover, setBtnHover] = useState(false);
+  const [wppNumber, setWppNumber] = useState("573164013230");
+
+  useEffect(() => {
+    api.get<{ footer_whatsapp_number: string }>("/settings")
+      .then((s) => { if (s.footer_whatsapp_number) setWppNumber(s.footer_whatsapp_number); })
+      .catch(() => {});
+  }, []);
 
   const total = items.reduce((s, i) => s + i.unitPrice * i.qty, 0);
 
@@ -59,7 +65,7 @@ export default function WhatsAppCart() {
     } catch { /* continuar aunque el backend no responda */ }
 
     window.open(
-      `https://wa.me/${siteData.getFooter().whatsappNumber || "573164013230"}?text=${encodeURIComponent(buildMessage(name.trim()))}`,
+      `https://wa.me/${wppNumber}?text=${encodeURIComponent(buildMessage(name.trim()))}`,
       "_blank"
     );
     clear(); setShowForm(false); setOpen(false);

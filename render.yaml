@@ -8,10 +8,23 @@ services:
     rootDir: backend
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    # Disco persistente: sin esto, cada redeploy borra incodol.db (Render no
+    # conserva el filesystem de un "web service" entre despliegues) y con eso
+    # se pierde todo lo que se haya subido desde el panel.
+    disk:
+      name: incodol-data
+      mountPath: /var/data
+      sizeGB: 1
     envVars:
-      - key: SECRET_KEY
+      # OJO: estos nombres deben coincidir con los que lee Settings en
+      # app/core/config.py (JWT_SECRET, CORS_ORIGINS) — con SECRET_KEY /
+      # ALLOWED_ORIGINS, pydantic-settings los ignora en silencio y cae al
+      # default (CORS_ORIGINS=http://localhost:3000), bloqueando por CORS
+      # cualquier request real desde Netlify: login, crear/editar producto,
+      # todo.
+      - key: JWT_SECRET
         generateValue: true        # Render genera uno automáticamente
       - key: DATABASE_URL
-        value: sqlite:///./incodol.db   # Cambiar por PostgreSQL en producción
-      - key: ALLOWED_ORIGINS
-        value: https://TU-SITIO.netlify.app
+        value: sqlite:////var/data/incodol.db   # Cambiar por PostgreSQL en produccion
+      - key: CORS_ORIGINS
+        value: https://vitrina-vs15.netlify.app

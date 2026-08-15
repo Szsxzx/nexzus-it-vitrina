@@ -1,7 +1,27 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useCart } from "@/lib/cart";
-import { siteData, type PremiumSection, type PremiumCut } from "@/lib/siteData";
+import { api } from "@/lib/api";
+
+interface PremiumSection {
+  id: number;
+  title: string;
+  icon: string;
+  color: string;
+}
+
+interface PremiumCut {
+  id: number;
+  section_id: number | null;
+  name: string;
+  price: string;
+  unit_price: number;
+  origin: string | null;
+  img: string | null;
+  badge: string | null;
+  badge_color: string;
+  text: string | null;
+}
 
 /** Hook: dispara cuando el elemento entra al viewport */
 function useInView(threshold = 0.15) {
@@ -27,7 +47,7 @@ function CutCard({ c, index }: { c: PremiumCut; index: number }) {
   const [imgHover, setImgHover] = useState(false);
 
   function handleAdd() {
-    add(c.name, c.price, c.unitPrice);
+    add(c.name, c.price, c.unit_price);
     setBtnAdded(true);
     setTimeout(() => setBtnAdded(false), 1500);
   }
@@ -54,7 +74,7 @@ function CutCard({ c, index }: { c: PremiumCut; index: number }) {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={c.img}
+          src={c.img ?? "/img/placeholder.jpg"}
           alt={c.name}
           className="w-full h-full object-cover"
           style={{
@@ -65,7 +85,7 @@ function CutCard({ c, index }: { c: PremiumCut; index: number }) {
         />
         {c.badge && (
           <span
-            className={`absolute top-3 left-3 text-white text-xs px-2.5 py-1 rounded-full font-semibold uppercase tracking-wide ${c.badgeColor}`}
+            className={`absolute top-3 left-3 text-white text-xs px-2.5 py-1 rounded-full font-semibold uppercase tracking-wide ${c.badge_color}`}
           >
             {c.badge}
           </span>
@@ -154,8 +174,8 @@ export default function PremiumCuts() {
   const { ref: titleRef, visible: titleVisible } = useInView(0.2);
 
   useEffect(() => {
-    setSections(siteData.getPremiumSections());
-    setCuts(siteData.getPremiumCuts());
+    api.get<PremiumSection[]>("/premium-sections").then(setSections).catch(() => {});
+    api.get<PremiumCut[]>("/premium-cuts").then(setCuts).catch(() => {});
   }, []);
 
   return (
@@ -185,7 +205,7 @@ export default function PremiumCuts() {
       {/* Secciones */}
       <div className="space-y-10">
         {sections.map((s, i) => {
-          const sectionCuts = cuts.filter((c) => c.sectionId === s.id);
+          const sectionCuts = cuts.filter((c) => c.section_id === s.id);
           if (sectionCuts.length === 0) return null;
           return (
             <SectionBlock key={s.id} s={s} cuts={sectionCuts} sectionIndex={i} />

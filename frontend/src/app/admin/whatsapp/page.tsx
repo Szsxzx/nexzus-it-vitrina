@@ -5,7 +5,9 @@ import {
   PageShell, PageHeader, Card, SavedToast,
   BtnPrimary, BtnSecondary, Field, Input,
 } from "@/components/AdminUI";
-import { siteData } from "@/lib/siteData";
+import { api, type ApiError } from "@/lib/api";
+
+const DEFAULT_NUMBER = "573164013230";
 
 export default function WhatsAppPage() {
   const { user, logout } = useAdminAuth();
@@ -14,29 +16,37 @@ export default function WhatsAppPage() {
   const [error, setError]     = useState<string | null>(null);
 
   useEffect(() => {
-    setNumber(siteData.getFooter().whatsappNumber);
+    api.get<{ footer_whatsapp_number: string }>("/settings")
+      .then((s) => setNumber(s.footer_whatsapp_number))
+      .catch((e: ApiError) => setError(e.detail));
   }, []);
 
-  function handleSave(e: React.FormEvent) {
+  async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     const clean = number.replace(/\D/g, "");
     if (clean.length < 10) {
       setError("Ingresa un número válido (mínimo 10 dígitos).");
       return;
     }
-    setError(null);
-    const footer = siteData.getFooter();
-    siteData.setFooter({ ...footer, whatsappNumber: clean });
-    setNumber(clean);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
+    try {
+      await api.patch("/settings", { footer_whatsapp_number: clean });
+      setNumber(clean);
+      setError(null);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } catch (e) {
+      setError((e as ApiError).detail);
+    }
   }
 
-  function handleReset() {
+  async function handleReset() {
     if (!confirm("¿Restaurar el número por defecto?")) return;
-    const footer = siteData.getFooter();
-    siteData.setFooter({ ...footer, whatsappNumber: "573164013230" });
-    setNumber("573164013230");
+    try {
+      await api.patch("/settings", { footer_whatsapp_number: DEFAULT_NUMBER });
+      setNumber(DEFAULT_NUMBER);
+    } catch (e) {
+      setError((e as ApiError).detail);
+    }
   }
 
   const preview = number.replace(/\D/g, "");

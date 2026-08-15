@@ -1,12 +1,23 @@
 "use client";
 import { useEffect, useState } from "react";
-import { siteData, defaultBlogs, type BlogPost } from "@/lib/siteData";
+import { api } from "@/lib/api";
+
+interface BlogPost {
+  id: number;
+  title: string;
+  date: string;
+  image: string | null;
+  excerpt: string;
+  content: string;
+}
 
 export default function BlogSection() {
-  const [blogs, setBlogs] = useState<BlogPost[]>(defaultBlogs);
+  const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [open, setOpen]   = useState<BlogPost | null>(null);
 
-  useEffect(() => { setBlogs(siteData.getBlogs()); }, []);
+  useEffect(() => {
+    api.get<BlogPost[]>("/blog-posts").then(setBlogs).catch(() => {});
+  }, []);
 
   // Bloquear scroll del body cuando el modal está abierto
   useEffect(() => {
@@ -42,7 +53,7 @@ export default function BlogSection() {
                 <div className="relative aspect-[16/9] bg-gray-100 overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={b.image}
+                    src={b.image ?? "/img/placeholder.jpg"}
                     alt={b.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     onError={(e) => ((e.currentTarget.src = "/img/placeholder.jpg"))}
@@ -95,7 +106,7 @@ export default function BlogSection() {
             <div className="relative aspect-[16/7] flex-shrink-0 bg-gray-100 overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={open.image}
+                src={open.image ?? "/img/placeholder.jpg"}
                 alt={open.title}
                 className="w-full h-full object-cover"
                 onError={(e) => ((e.currentTarget.src = "/img/placeholder.jpg"))}

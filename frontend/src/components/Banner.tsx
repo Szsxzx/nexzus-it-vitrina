@@ -1,7 +1,27 @@
 "use client";
 import { useEffect, useState } from "react";
-import { siteData, defaultBanner, type BannerData } from "@/lib/siteData";
+import { api } from "@/lib/api";
 
+interface BannerData {
+  subtitle: string;
+  title: string;
+  highlight: string;
+  ctaText: string;
+  ctaHref: string;
+}
+
+const defaultBanner: BannerData = {
+  subtitle: "La mejor carne de la ciudad",
+  title: "100% Natural",
+  highlight: "Carne Premium",
+  ctaText: "Ver catálogo",
+  ctaHref: "#products",
+};
+
+interface SettingsOut {
+  banner_subtitle: string; banner_title: string; banner_highlight: string;
+  banner_cta_text: string; banner_cta_href: string;
+}
 
 export default function Banner() {
   const [data, setData]       = useState<BannerData>(defaultBanner);
@@ -9,7 +29,12 @@ export default function Banner() {
   const [btnHover, setBtnHover] = useState(false);
 
   useEffect(() => {
-    setData(siteData.getBanner());
+    api.get<SettingsOut>("/settings")
+      .then((s) => setData({
+        subtitle: s.banner_subtitle, title: s.banner_title, highlight: s.banner_highlight,
+        ctaText: s.banner_cta_text, ctaHref: s.banner_cta_href,
+      }))
+      .catch(() => {});
     // Pequeño delay para que la animación de entrada sea visible
     const t = setTimeout(() => setVisible(true), 100);
     return () => clearTimeout(t);

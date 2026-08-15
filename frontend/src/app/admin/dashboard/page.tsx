@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useAdminAuth } from "@/lib/AdminAuthContext";
 import { PageShell, PageHeader, ErrorBox } from "@/components/AdminUI";
-import { api, loadToken } from "@/lib/api";
+import { api } from "@/lib/api";
 import type { DashboardStats } from "@/lib/types";
 
 const fmtCOP = new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 });
@@ -22,7 +22,7 @@ export default function DashboardPage() {
   const [err, setErr]     = useState<string | null>(null);
 
   useEffect(() => {
-    api.get<DashboardStats>("/dashboard/stats", loadToken()!)
+    api.get<DashboardStats>("/dashboard/stats")
       .then(setStats)
       .catch((e) => setErr(e.detail));
   }, []);

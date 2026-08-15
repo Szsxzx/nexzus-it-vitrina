@@ -2,20 +2,36 @@
 import { useEffect, useState } from "react";
 import { useAdminAuth } from "@/lib/AdminAuthContext";
 import {
-  PageShell, PageHeader, SavedToast, EmptyState,
+  PageShell, PageHeader, SavedToast, ErrorBox, EmptyState,
   Table, Thead, Th, Tbody, Tr, Td,
   Modal, ModalBody, ModalFooter,
   BtnPrimary, BtnSecondary, BtnGhost, BtnDanger,
   SortButtons, Field, Input, Select,
 } from "@/components/AdminUI";
 import ImageUpload from "@/components/ImageUpload";
-import {
-  siteData,
-  defaultPremiumSections,
-  defaultPremiumCuts,
-  type PremiumSection,
-  type PremiumCut,
-} from "@/lib/siteData";
+import { api, type ApiError } from "@/lib/api";
+
+interface PremiumSection {
+  id: number;
+  title: string;
+  icon: string;
+  color: string;
+  sort_order: number;
+}
+
+interface PremiumCut {
+  id: number;
+  section_id: number | null;
+  name: string;
+  price: string;
+  unit_price: number;
+  origin: string | null;
+  img: string | null;
+  badge: string | null;
+  badge_color: string;
+  text: string | null;
+  sort_order: number;
+}
 
 const ICON_OPTIONS = [
   { value: "fa-cow",            label: "🐄 Res" },
@@ -50,15 +66,13 @@ const colorHex: Record<string, string> = {
   "bg-amber-600": "#d97706", "bg-pink-700": "#be185d",
 };
 
-const emptySection = (): PremiumSection => ({
-  id: `sec-${Date.now()}`, title: "", icon: "fa-cow", color: "bg-rojo",
-});
+type EditingSection = Partial<PremiumSection> & { title: string; icon: string; color: string };
+type EditingCut = Partial<PremiumCut> & { name: string; price: string; badge_color: string };
 
-const emptyCut = (sections: PremiumSection[]): PremiumCut => ({
-  id: `cut-${Date.now()}`,
-  sectionId: sections[0]?.id ?? "",
-  name: "", price: "", unitPrice: 0, origin: "",
-  img: "", badge: "", badgeColor: "bg-rojo", text: "",
+const emptySection = (): EditingSection => ({ title: "", icon: "fa-cow", color: "bg-rojo" });
+const emptyCut = (sections: PremiumSection[]): EditingCut => ({
+  section_id: sections[0]?.id ?? null,
+  name: "", price: "", unit_price: 0, origin: "", img: "", badge: "", badge_color: "bg-rojo", text: "",
 });
 
 export default function PremiumCutsPage() {
@@ -66,95 +80,91 @@ export default function PremiumCutsPage() {
   const [sections, setSections] = useState<PremiumSection[]>([]);
   const [cuts, setCuts] = useState<PremiumCut[]>([]);
   const [saved, setSaved] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
-  // Modales secciones
-  const [editingSection, setEditingSection] = useState<PremiumSection | null>(null);
+  const [editingSection, setEditingSection] = useState<EditingSection | null>(null);
   const [isNewSection, setIsNewSection] = useState(false);
 
-  // Modales cortes
-  const [editingCut, setEditingCut] = useState<PremiumCut | null>(null);
+  const [editingCut, setEditingCut] = useState<EditingCut | null>(null);
   const [isNewCut, setIsNewCut] = useState(false);
 
-  useEffect(() => {
-    setSections(siteData.getPremiumSections());
-    setCuts(siteData.getPremiumCuts());
-  }, []);
+  function reload() {
+    api.get<PremiumSection[]>("/premium-sections").then(setSections).catch((e: ApiError) => setErr(e.detail));
+    api.get<PremiumCut[]>("/premium-cuts").then(setCuts).catch((e: ApiError) => setErr(e.detail));
+  }
+  useEffect(reload, []);
 
   function flash() { setSaved(true); setTimeout(() => setSaved(false), 2000); }
 
   // ── Secciones ──
-  function persistSections(updated: PremiumSection[]) {
-    setSections(updated); siteData.setPremiumSections(updated); flash();
-  }
-  function saveSection(e: React.FormEvent) {
+  async function saveSection(e: React.FormEvent) {
     e.preventDefault();
     if (!editingSection) return;
-    if (!editingSection.id.trim()) { alert("El ID es obligatorio"); return; }
-    persistSections(
-      isNewSection
-        ? [...sections, editingSection]
-        : sections.map((s) => s.id === editingSection.id ? editingSection : s)
-    );
-    setEditingSection(null);
+    try {
+      if (isNewSection) await api.post("/premium-sections", editingSection);
+      else await api.patch(`/premium-sections/${editingSection.id}`, editingSection);
+      setEditingSection(null);
+      reload();
+      flash();
+    } catch (e) { setErr((e as ApiError).detail); }
   }
-  function removeSection(id: string) {
+  async function removeSection(id: number) {
     if (!confirm("¿Eliminar esta sección? Los cortes asociados quedarán sin sección.")) return;
-    persistSections(sections.filter((s) => s.id !== id));
+    try { await api.delete(`/premium-sections/${id}`); reload(); }
+    catch (e) { setErr((e as ApiError).detail); }
   }
-  function moveSectionUp(idx: number) {
-    if (idx === 0) return;
-    const arr = [...sections]; [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]]; persistSections(arr);
+  async function swapSection(a: PremiumSection, b: PremiumSection) {
+    try {
+      await Promise.all([
+        api.patch(`/premium-sections/${a.id}`, { sort_order: b.sort_order }),
+        api.patch(`/premium-sections/${b.id}`, { sort_order: a.sort_order }),
+      ]);
+      reload();
+    } catch (e) { setErr((e as ApiError).detail); }
   }
-  function moveSectionDown(idx: number) {
-    if (idx === sections.length - 1) return;
-    const arr = [...sections]; [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]]; persistSections(arr);
-  }
+  function moveSectionUp(idx: number) { if (idx > 0) swapSection(sections[idx], sections[idx - 1]); }
+  function moveSectionDown(idx: number) { if (idx < sections.length - 1) swapSection(sections[idx], sections[idx + 1]); }
 
   // ── Cortes ──
-  function persistCuts(updated: PremiumCut[]) {
-    setCuts(updated); siteData.setPremiumCuts(updated); flash();
-  }
-  function saveCut(e: React.FormEvent) {
+  async function saveCut(e: React.FormEvent) {
     e.preventDefault();
     if (!editingCut) return;
-    persistCuts(
-      isNewCut
-        ? [...cuts, editingCut]
-        : cuts.map((c) => c.id === editingCut.id ? editingCut : c)
-    );
-    setEditingCut(null);
+    const unit_price = Number(editingCut.price.replace(/[^0-9]/g, "")) || 0;
+    const body = { ...editingCut, unit_price };
+    try {
+      if (isNewCut) await api.post("/premium-cuts", body);
+      else await api.patch(`/premium-cuts/${editingCut.id}`, body);
+      setEditingCut(null);
+      reload();
+      flash();
+    } catch (e) { setErr((e as ApiError).detail); }
   }
-  function removeCut(id: string) {
+  async function removeCut(id: number) {
     if (!confirm("¿Eliminar este corte?")) return;
-    persistCuts(cuts.filter((c) => c.id !== id));
+    try { await api.delete(`/premium-cuts/${id}`); reload(); }
+    catch (e) { setErr((e as ApiError).detail); }
   }
-  function moveCutUp(idx: number) {
-    if (idx === 0) return;
-    const arr = [...cuts]; [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]]; persistCuts(arr);
+  async function swapCut(a: PremiumCut, b: PremiumCut) {
+    try {
+      await Promise.all([
+        api.patch(`/premium-cuts/${a.id}`, { sort_order: b.sort_order }),
+        api.patch(`/premium-cuts/${b.id}`, { sort_order: a.sort_order }),
+      ]);
+      reload();
+    } catch (e) { setErr((e as ApiError).detail); }
   }
-  function moveCutDown(idx: number) {
-    if (idx === cuts.length - 1) return;
-    const arr = [...cuts]; [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]]; persistCuts(arr);
-  }
-
-  function resetAll() {
-    if (!confirm("¿Restaurar todos los cortes y secciones a los valores por defecto?")) return;
-    siteData.resetPremiumSections(); siteData.resetPremiumCuts();
-    setSections(defaultPremiumSections); setCuts(defaultPremiumCuts); flash();
-  }
+  function moveCutUp(idx: number) { if (idx > 0) swapCut(cuts[idx], cuts[idx - 1]); }
+  function moveCutDown(idx: number) { if (idx < cuts.length - 1) swapCut(cuts[idx], cuts[idx + 1]); }
 
   return (
       <PageShell>
         <PageHeader
           title="Cortes Premium"
           subtitle="Secciones y cortes de la vitrina"
-          actions={
-            <div className="flex items-center gap-3">
-              <SavedToast visible={saved} />
-              <BtnSecondary onClick={resetAll}>Restaurar defecto</BtnSecondary>
-            </div>
-          }
+          actions={<SavedToast visible={saved} />}
         />
+
+        <ErrorBox message={err} />
 
         {/* ── SECCIONES ── */}
         <div className="mb-8">
@@ -232,7 +242,7 @@ export default function PremiumCutsPage() {
             </Thead>
             <Tbody>
               {cuts.map((c, idx) => {
-                const sec = sections.find((s) => s.id === c.sectionId);
+                const sec = sections.find((s) => s.id === c.section_id);
                 return (
                   <Tr key={c.id}>
                     <Td muted><SortButtons onUp={() => moveCutUp(idx)} onDown={() => moveCutDown(idx)} /></Td>
@@ -254,7 +264,7 @@ export default function PremiumCutsPage() {
                     <Td>
                       <span
                         className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold text-white"
-                        style={{ background: colorHex[c.badgeColor] ?? "#8B0000" }}
+                        style={{ background: colorHex[c.badge_color] ?? "#8B0000" }}
                       >
                         {c.badge}
                       </span>
@@ -295,16 +305,6 @@ export default function PremiumCutsPage() {
                   required
                 />
               </Field>
-              {isNewSection && (
-                <Field label="ID (slug único)" required>
-                  <Input
-                    value={editingSection?.id ?? ""}
-                    onChange={(e) => setEditingSection({ ...editingSection!, id: e.target.value.toLowerCase().replace(/\s+/g, "-") })}
-                    placeholder="res"
-                    required
-                  />
-                </Field>
-              )}
               <div className="grid grid-cols-2 gap-3">
                 <Field label="Ícono">
                   <Select
@@ -341,8 +341,8 @@ export default function PremiumCutsPage() {
             <ModalBody>
               <Field label="Sección" required>
                 <Select
-                  value={editingCut?.sectionId ?? ""}
-                  onChange={(e) => setEditingCut({ ...editingCut!, sectionId: e.target.value })}
+                  value={editingCut?.section_id ?? ""}
+                  onChange={(e) => setEditingCut({ ...editingCut!, section_id: Number(e.target.value) })}
                 >
                   {sections.map((s) => <option key={s.id} value={s.id}>{s.title}</option>)}
                 </Select>
@@ -364,14 +364,6 @@ export default function PremiumCutsPage() {
                     required
                   />
                 </Field>
-                <Field label="Precio unitario (número)">
-                  <Input
-                    type="number"
-                    value={editingCut?.unitPrice ?? 0}
-                    onChange={(e) => setEditingCut({ ...editingCut!, unitPrice: Number(e.target.value) })}
-                    placeholder="32000"
-                  />
-                </Field>
                 <Field label="Badge">
                   <Input
                     value={editingCut?.badge ?? ""}
@@ -381,8 +373,8 @@ export default function PremiumCutsPage() {
                 </Field>
                 <Field label="Color del badge">
                   <Select
-                    value={editingCut?.badgeColor ?? "bg-rojo"}
-                    onChange={(e) => setEditingCut({ ...editingCut!, badgeColor: e.target.value })}
+                    value={editingCut?.badge_color ?? "bg-rojo"}
+                    onChange={(e) => setEditingCut({ ...editingCut!, badge_color: e.target.value })}
                   >
                     {BADGE_COLOR_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                   </Select>
@@ -416,7 +408,6 @@ export default function PremiumCutsPage() {
             </ModalFooter>
           </form>
         </Modal>
-
       </PageShell>
   );
 }

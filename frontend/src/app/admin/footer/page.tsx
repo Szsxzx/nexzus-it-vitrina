@@ -2,30 +2,78 @@
 import { useEffect, useState } from "react";
 import { useAdminAuth } from "@/lib/AdminAuthContext";
 import {
-  PageShell, PageHeader, Card, SavedToast,
+  PageShell, PageHeader, Card, SavedToast, ErrorBox,
   BtnPrimary, BtnSecondary,
   Field, Input,
 } from "@/components/AdminUI";
-import { siteData, defaultFooter, type FooterData } from "@/lib/siteData";
+import { api, type ApiError } from "@/lib/api";
+
+interface FooterData {
+  address: string;
+  phone: string;
+  email: string;
+  whatsappNumber: string;
+  scheduleWeek: string;
+  scheduleSunday: string;
+  copyright: string;
+}
+
+const defaultFooter: FooterData = {
+  address: "Carrera 76 #20f-107, Barrio París, Medellín",
+  phone: "316 401 3230",
+  email: "contacto@fuentedevida.co",
+  whatsappNumber: "573164013230",
+  scheduleWeek: "Lunes a Sábado: 7am – 8pm",
+  scheduleSunday: "Domingos: 8am – 2pm",
+  copyright: "Carnicería Expendio Fuente de Vida — Todos los derechos reservados.",
+};
+
+interface SettingsOut {
+  footer_address: string; footer_phone: string; footer_email: string; footer_whatsapp_number: string;
+  footer_schedule_week: string; footer_schedule_sunday: string; footer_copyright: string;
+}
+
+const toForm = (s: SettingsOut): FooterData => ({
+  address: s.footer_address, phone: s.footer_phone, email: s.footer_email,
+  whatsappNumber: s.footer_whatsapp_number, scheduleWeek: s.footer_schedule_week,
+  scheduleSunday: s.footer_schedule_sunday, copyright: s.footer_copyright,
+});
+const toPayload = (f: FooterData) => ({
+  footer_address: f.address, footer_phone: f.phone, footer_email: f.email,
+  footer_whatsapp_number: f.whatsappNumber, footer_schedule_week: f.scheduleWeek,
+  footer_schedule_sunday: f.scheduleSunday, footer_copyright: f.copyright,
+});
 
 export default function FooterPage() {
   const { user, logout } = useAdminAuth();
   const [form, setForm] = useState<FooterData>(defaultFooter);
   const [saved, setSaved] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
-  useEffect(() => { setForm(siteData.getFooter()); }, []);
+  useEffect(() => {
+    api.get<SettingsOut>("/settings").then((s) => setForm(toForm(s))).catch((e: ApiError) => setErr(e.detail));
+  }, []);
 
-  function handleSave(e: React.FormEvent) {
+  async function handleSave(e: React.FormEvent) {
     e.preventDefault();
-    siteData.setFooter(form);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
+    try {
+      const s = await api.patch<SettingsOut>("/settings", toPayload(form));
+      setForm(toForm(s));
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } catch (e) {
+      setErr((e as ApiError).detail);
+    }
   }
 
-  function handleReset() {
+  async function handleReset() {
     if (!confirm("¿Restaurar pie de página por defecto?")) return;
-    siteData.resetFooter();
-    setForm(defaultFooter);
+    try {
+      const s = await api.patch<SettingsOut>("/settings", toPayload(defaultFooter));
+      setForm(toForm(s));
+    } catch (e) {
+      setErr((e as ApiError).detail);
+    }
   }
 
   return (
@@ -44,6 +92,8 @@ export default function FooterPage() {
             </a>
           }
         />
+
+        <ErrorBox message={err} />
 
         <form onSubmit={handleSave}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

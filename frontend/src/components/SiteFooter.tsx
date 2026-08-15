@@ -1,6 +1,31 @@
 "use client";
 import { useEffect, useState } from "react";
-import { siteData, defaultFooter, type FooterData } from "@/lib/siteData";
+import { api } from "@/lib/api";
+
+interface FooterData {
+  address: string;
+  phone: string;
+  email: string;
+  whatsappNumber: string;
+  scheduleWeek: string;
+  scheduleSunday: string;
+  copyright: string;
+}
+
+const defaultFooter: FooterData = {
+  address: "Carrera 76 #20f-107, Barrio París, Medellín",
+  phone: "316 401 3230",
+  email: "contacto@fuentedevida.co",
+  whatsappNumber: "573164013230",
+  scheduleWeek: "Lunes a Sábado: 7am – 8pm",
+  scheduleSunday: "Domingos: 8am – 2pm",
+  copyright: "Carnicería Expendio Fuente de Vida — Todos los derechos reservados.",
+};
+
+interface SettingsOut {
+  footer_address: string; footer_phone: string; footer_email: string; footer_whatsapp_number: string;
+  footer_schedule_week: string; footer_schedule_sunday: string; footer_copyright: string;
+}
 
 function FooterLink({
   href, children, external = false,
@@ -31,7 +56,15 @@ function FooterLink({
 export default function SiteFooter() {
   const [data, setData] = useState<FooterData>(defaultFooter);
 
-  useEffect(() => { setData(siteData.getFooter()); }, []);
+  useEffect(() => {
+    api.get<SettingsOut>("/settings")
+      .then((s) => setData({
+        address: s.footer_address, phone: s.footer_phone, email: s.footer_email,
+        whatsappNumber: s.footer_whatsapp_number, scheduleWeek: s.footer_schedule_week,
+        scheduleSunday: s.footer_schedule_sunday, copyright: s.footer_copyright,
+      }))
+      .catch(() => {});
+  }, []);
 
   return (
     <footer id="contact" className="bg-negro text-white mt-12">

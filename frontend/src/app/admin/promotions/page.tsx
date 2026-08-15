@@ -2,14 +2,26 @@
 import { useEffect, useState } from "react";
 import { useAdminAuth } from "@/lib/AdminAuthContext";
 import {
-  PageShell, PageHeader, SavedToast, EmptyState,
+  PageShell, PageHeader, SavedToast, ErrorBox, EmptyState,
   Table, Thead, Th, Tbody, Tr, Td,
   Modal, ModalBody, ModalFooter,
   BtnPrimary, BtnSecondary, BtnGhost, BtnDanger,
   SortButtons, Field, Input, Select,
 } from "@/components/AdminUI";
 import ImageUpload from "@/components/ImageUpload";
-import { siteData, defaultPromos, type PromoItem } from "@/lib/siteData";
+import { api, type ApiError } from "@/lib/api";
+
+interface PromoItem {
+  id: number;
+  name: string;
+  price: string;
+  old_price: string | null;
+  unit_price: number;
+  off: string;
+  color: string;
+  img: string | null;
+  sort_order: number;
+}
 
 const COLOR_OPTIONS = [
   { value: "bg-rojo",      label: "🔴 Rojo" },
@@ -19,62 +31,65 @@ const COLOR_OPTIONS = [
   { value: "bg-amber-600", label: "🟡 Ámbar" },
 ];
 
-const emptyPromo = (): PromoItem => ({
-  id: `promo-${Date.now()}`,
-  name: "", price: "", oldPrice: "", off: "",
-  color: "bg-rojo", img: "",
-});
-
 const colorHex: Record<string, string> = {
   "bg-rojo": "#8B0000", "bg-negro2": "#1a1a1a",
   "bg-azul": "#3AA8C1", "bg-green-700": "#15803d",
   "bg-amber-600": "#d97706",
 };
 
+type EditingPromo = Partial<PromoItem> & { name: string; price: string; off: string; color: string };
+
+const emptyPromo = (): EditingPromo => ({ name: "", price: "", old_price: "", off: "", color: "bg-rojo", img: "" });
+
 export default function PromotionsPage() {
   const { user, logout } = useAdminAuth();
   const [items, setItems] = useState<PromoItem[]>([]);
-  const [editing, setEditing] = useState<PromoItem | null>(null);
+  const [editing, setEditing] = useState<EditingPromo | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
-  useEffect(() => { setItems(siteData.getPromos()); }, []);
-
-  function persist(updated: PromoItem[]) {
-    setItems(updated);
-    siteData.setPromos(updated);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+  function reload() {
+    api.get<PromoItem[]>("/promotions").then(setItems).catch((e: ApiError) => setErr(e.detail));
   }
+  useEffect(reload, []);
+
+  function flash() { setSaved(true); setTimeout(() => setSaved(false), 2000); }
 
   function openNew() { setEditing(emptyPromo()); setIsNew(true); }
   function openEdit(p: PromoItem) { setEditing({ ...p }); setIsNew(false); }
 
-  function saveEditing(e: React.FormEvent) {
+  async function saveEditing(e: React.FormEvent) {
     e.preventDefault();
     if (!editing) return;
-    persist(isNew ? [...items, editing] : items.map((p) => p.id === editing.id ? editing : p));
-    setEditing(null);
+    const unit_price = Number(editing.price.replace(/[^0-9]/g, "")) || 0;
+    const body = { ...editing, unit_price };
+    try {
+      if (isNew) await api.post("/promotions", body);
+      else await api.patch(`/promotions/${editing.id}`, body);
+      setEditing(null);
+      reload();
+      flash();
+    } catch (e) { setErr((e as ApiError).detail); }
   }
 
-  function remove(id: string) {
+  async function remove(id: number) {
     if (!confirm("¿Eliminar esta promoción?")) return;
-    persist(items.filter((p) => p.id !== id));
+    try { await api.delete(`/promotions/${id}`); reload(); }
+    catch (e) { setErr((e as ApiError).detail); }
   }
 
-  function moveUp(idx: number) {
-    if (idx === 0) return;
-    const arr = [...items];
-    [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]];
-    persist(arr);
+  async function swap(a: PromoItem, b: PromoItem) {
+    try {
+      await Promise.all([
+        api.patch(`/promotions/${a.id}`, { sort_order: b.sort_order }),
+        api.patch(`/promotions/${b.id}`, { sort_order: a.sort_order }),
+      ]);
+      reload();
+    } catch (e) { setErr((e as ApiError).detail); }
   }
-
-  function moveDown(idx: number) {
-    if (idx === items.length - 1) return;
-    const arr = [...items];
-    [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]];
-    persist(arr);
-  }
+  function moveUp(idx: number) { if (idx > 0) swap(items[idx], items[idx - 1]); }
+  function moveDown(idx: number) { if (idx < items.length - 1) swap(items[idx], items[idx + 1]); }
 
   return (
       <PageShell>
@@ -84,15 +99,14 @@ export default function PromotionsPage() {
           actions={
             <div className="flex items-center gap-3">
               <SavedToast visible={saved} />
-              <BtnSecondary onClick={() => { siteData.resetPromos(); setItems(defaultPromos); }}>
-                Restaurar defecto
-              </BtnSecondary>
               <BtnPrimary onClick={openNew}>
                 <i className="fa-solid fa-plus text-xs" /> Nueva promoción
               </BtnPrimary>
             </div>
           }
         />
+
+        <ErrorBox message={err} />
 
         <Table>
           <Thead>
@@ -110,7 +124,7 @@ export default function PromotionsPage() {
                 <Td muted><SortButtons onUp={() => moveUp(idx)} onDown={() => moveDown(idx)} /></Td>
                 <Td><span className="font-semibold text-gray-900">{p.name}</span></Td>
                 <Td><span className="font-semibold">{p.price}</span></Td>
-                <Td muted><span className="line-through text-xs">{p.oldPrice || "—"}</span></Td>
+                <Td muted><span className="line-through text-xs">{p.old_price || "—"}</span></Td>
                 <Td>
                   <span
                     className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold text-white"
@@ -159,7 +173,7 @@ export default function PromotionsPage() {
                   </div>
                   <div className="p-3">
                     <span className="font-bold text-gray-900 text-sm">{p.price}</span>
-                    {p.oldPrice && <span className="ml-1.5 text-xs text-gray-400 line-through">{p.oldPrice}</span>}
+                    {p.old_price && <span className="ml-1.5 text-xs text-gray-400 line-through">{p.old_price}</span>}
                   </div>
                 </div>
               ))}
@@ -182,7 +196,7 @@ export default function PromotionsPage() {
                   <Input value={editing?.price ?? ""} onChange={(e) => setEditing({ ...editing!, price: e.target.value })} placeholder="$45.000" required />
                 </Field>
                 <Field label="Precio anterior">
-                  <Input value={editing?.oldPrice ?? ""} onChange={(e) => setEditing({ ...editing!, oldPrice: e.target.value })} placeholder="$70.000" />
+                  <Input value={editing?.old_price ?? ""} onChange={(e) => setEditing({ ...editing!, old_price: e.target.value })} placeholder="$70.000" />
                 </Field>
                 <Field label="Badge / descuento" required>
                   <Input value={editing?.off ?? ""} onChange={(e) => setEditing({ ...editing!, off: e.target.value })} placeholder="36% OFF" required />

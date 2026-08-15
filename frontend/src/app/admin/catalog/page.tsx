@@ -2,14 +2,23 @@
 import { useEffect, useState } from "react";
 import { useAdminAuth } from "@/lib/AdminAuthContext";
 import {
-  PageShell, PageHeader, SavedToast, EmptyState,
+  PageShell, PageHeader, SavedToast, ErrorBox, EmptyState,
   Table, Thead, Th, Tbody, Tr, Td,
   Modal, ModalBody, ModalFooter,
   BtnPrimary, BtnSecondary, BtnGhost, BtnDanger,
   SortButtons, Field, Input, Select,
 } from "@/components/AdminUI";
 import ImageUpload from "@/components/ImageUpload";
-import { siteData, defaultCategories, type CatalogCategory } from "@/lib/siteData";
+import { api, type ApiError } from "@/lib/api";
+
+interface CatalogCategory {
+  id: number;
+  slug: string;
+  label: string;
+  css_class: string;
+  image: string | null;
+  sort_order: number;
+}
 
 const GRADIENT_OPTIONS = [
   { value: "from-rojo to-rojo-mid",        label: "Rojo" },
@@ -22,53 +31,58 @@ const GRADIENT_OPTIONS = [
   { value: "from-negro to-negro2",          label: "Negro" },
 ];
 
-const emptyCategory = (): CatalogCategory => ({ id: "", label: "", cssClass: "from-rojo to-rojo-mid" });
+type EditingCategory = Partial<CatalogCategory> & { slug: string; label: string; css_class: string };
+
+const emptyCategory = (): EditingCategory => ({ slug: "", label: "", css_class: "from-rojo to-rojo-mid" });
 
 export default function CatalogPage() {
   const { user, logout } = useAdminAuth();
   const [items, setItems] = useState<CatalogCategory[]>([]);
-  const [editing, setEditing] = useState<CatalogCategory | null>(null);
+  const [editing, setEditing] = useState<EditingCategory | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
-  useEffect(() => { setItems(siteData.getCategories()); }, []);
-
-  function persist(updated: CatalogCategory[]) {
-    setItems(updated);
-    siteData.setCategories(updated);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+  function reload() {
+    api.get<CatalogCategory[]>("/catalog-categories").then(setItems).catch((e: ApiError) => setErr(e.detail));
   }
+  useEffect(reload, []);
+
+  function flash() { setSaved(true); setTimeout(() => setSaved(false), 2000); }
 
   function openNew() { setEditing(emptyCategory()); setIsNew(true); }
   function openEdit(c: CatalogCategory) { setEditing({ ...c }); setIsNew(false); }
 
-  function saveEditing(e: React.FormEvent) {
+  async function saveEditing(e: React.FormEvent) {
     e.preventDefault();
     if (!editing) return;
-    if (!editing.id.trim()) { alert("El slug/ID es obligatorio"); return; }
-    persist(isNew ? [...items, editing] : items.map((c) => c.id === editing.id ? editing : c));
-    setEditing(null);
+    if (!editing.slug.trim()) { alert("El slug/ID es obligatorio"); return; }
+    try {
+      if (isNew) await api.post("/catalog-categories", editing);
+      else await api.patch(`/catalog-categories/${editing.id}`, editing);
+      setEditing(null);
+      reload();
+      flash();
+    } catch (e) { setErr((e as ApiError).detail); }
   }
 
-  function remove(id: string) {
+  async function remove(id: number) {
     if (!confirm("¿Eliminar esta categoría?")) return;
-    persist(items.filter((c) => c.id !== id));
+    try { await api.delete(`/catalog-categories/${id}`); reload(); }
+    catch (e) { setErr((e as ApiError).detail); }
   }
 
-  function moveUp(idx: number) {
-    if (idx === 0) return;
-    const arr = [...items];
-    [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]];
-    persist(arr);
+  async function swap(a: CatalogCategory, b: CatalogCategory) {
+    try {
+      await Promise.all([
+        api.patch(`/catalog-categories/${a.id}`, { sort_order: b.sort_order }),
+        api.patch(`/catalog-categories/${b.id}`, { sort_order: a.sort_order }),
+      ]);
+      reload();
+    } catch (e) { setErr((e as ApiError).detail); }
   }
-
-  function moveDown(idx: number) {
-    if (idx === items.length - 1) return;
-    const arr = [...items];
-    [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]];
-    persist(arr);
-  }
+  function moveUp(idx: number) { if (idx > 0) swap(items[idx], items[idx - 1]); }
+  function moveDown(idx: number) { if (idx < items.length - 1) swap(items[idx], items[idx + 1]); }
 
   return (
       <PageShell>
@@ -78,15 +92,14 @@ export default function CatalogPage() {
           actions={
             <div className="flex items-center gap-3">
               <SavedToast visible={saved} />
-              <BtnSecondary onClick={() => { siteData.resetCategories(); setItems(defaultCategories); }}>
-                Restaurar defecto
-              </BtnSecondary>
               <BtnPrimary onClick={openNew}>
                 <i className="fa-solid fa-plus text-xs" /> Nueva categoría
               </BtnPrimary>
             </div>
           }
         />
+
+        <ErrorBox message={err} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Tabla */}
@@ -104,11 +117,11 @@ export default function CatalogPage() {
                   <Tr key={c.id}>
                     <Td muted><SortButtons onUp={() => moveUp(idx)} onDown={() => moveDown(idx)} /></Td>
                     <Td>
-                      <span className="font-mono text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded-md">{c.id}</span>
+                      <span className="font-mono text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded-md">{c.slug}</span>
                     </Td>
                     <Td><span className="font-semibold text-gray-900">{c.label}</span></Td>
                     <Td>
-                      <div className={`w-12 h-5 rounded-md bg-gradient-to-br ${c.cssClass}`} />
+                      <div className={`w-12 h-5 rounded-md bg-gradient-to-br ${c.css_class}`} />
                     </Td>
                     <Td>
                       <div className="flex items-center justify-end gap-3">
@@ -136,7 +149,7 @@ export default function CatalogPage() {
               {items.map((c) => (
                 <div
                   key={c.id}
-                  className={`bg-gradient-to-br ${c.cssClass} rounded-xl aspect-square p-3 flex flex-col justify-end text-white`}
+                  className={`bg-gradient-to-br ${c.css_class} rounded-xl aspect-square p-3 flex flex-col justify-end text-white`}
                 >
                   <p className="font-semibold text-xs leading-tight">{c.label}</p>
                   <span className="text-[9px] uppercase tracking-wider opacity-70 mt-0.5">Ver más →</span>
@@ -155,8 +168,8 @@ export default function CatalogPage() {
             <ModalBody>
               <Field label="Slug / ID" required hint="Sin espacios. Se usa para filtrar productos. No se puede cambiar después.">
                 <Input
-                  value={editing?.id ?? ""}
-                  onChange={(e) => setEditing({ ...editing!, id: e.target.value.toLowerCase().replace(/\s/g, "-") })}
+                  value={editing?.slug ?? ""}
+                  onChange={(e) => setEditing({ ...editing!, slug: e.target.value.toLowerCase().replace(/\s/g, "-") })}
                   placeholder="res, cerdo, pollo..."
                   disabled={!isNew}
                   required
@@ -172,13 +185,13 @@ export default function CatalogPage() {
               </Field>
               <Field label="Color / Gradiente">
                 <Select
-                  value={editing?.cssClass ?? "from-rojo to-rojo-mid"}
-                  onChange={(e) => setEditing({ ...editing!, cssClass: e.target.value })}
+                  value={editing?.css_class ?? "from-rojo to-rojo-mid"}
+                  onChange={(e) => setEditing({ ...editing!, css_class: e.target.value })}
                 >
                   {GRADIENT_OPTIONS.map((g) => <option key={g.value} value={g.value}>{g.label}</option>)}
                 </Select>
                 {editing && (
-                  <div className={`mt-2 h-10 rounded-xl bg-gradient-to-br ${editing.cssClass}`} />
+                  <div className={`mt-2 h-10 rounded-xl bg-gradient-to-br ${editing.css_class}`} />
                 )}
               </Field>
               <Field label="Imagen de portada" hint="Se muestra en la tarjeta de la categoría. Si no hay imagen se usa solo el color.">

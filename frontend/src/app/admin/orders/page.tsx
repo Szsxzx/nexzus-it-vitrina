@@ -6,7 +6,7 @@ import {
   Table, Thead, Th, Tbody, Tr, Td, EmptyState,
   Modal, ModalBody,
 } from "@/components/AdminUI";
-import { api, loadToken, type ApiError } from "@/lib/api";
+import { api, type ApiError } from "@/lib/api";
 import type { Order, OrderStatus } from "@/lib/types";
 
 const STATUSES: OrderStatus[] = ["pendiente", "confirmado", "en_camino", "entregado", "cancelado"];
@@ -35,14 +35,14 @@ export default function OrdersPage() {
 
   function reload() {
     const path = filter === "all" ? "/orders" : `/orders?status_filter=${filter}`;
-    api.get<Order[]>(path, loadToken()!).then(setOrders).catch((e: ApiError) => setErr(e.detail));
+    api.get<Order[]>(path).then(setOrders).catch((e: ApiError) => setErr(e.detail));
   }
   useEffect(() => { if (user) reload(); }, [user, filter]);
 
   async function changeStatus(id: number, status: OrderStatus) {
     setChanging(true);
     try {
-      const updated = await api.patch<Order>(`/orders/${id}/status`, { status }, loadToken()!);
+      const updated = await api.patch<Order>(`/orders/${id}/status`, { status });
       setOrders((p) => p.map((o) => (o.id === id ? updated : o)));
       if (open?.id === id) setOpen(updated);
     } catch (e) { setErr((e as ApiError).detail); }

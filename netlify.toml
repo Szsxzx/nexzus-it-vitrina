@@ -6,3 +6,9 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  # Sin esto, el export estatico hornea el default de frontend/src/lib/api.ts
+  # (http://localhost:4000) para TODOS los visitantes: nada carga nunca,
+  # ningun login ni CRUD funciona en produccion. Verifica que esta sea la URL
+  # real del servicio en Render (el nombre "incodol-api" de render.yaml da
+  # esta URL por default, pero confirma si la renombraste en el dashboard).
+  NEXT_PUBLIC_API_URL = "https://incodol-api.onrender.com"

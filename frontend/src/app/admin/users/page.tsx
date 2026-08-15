@@ -6,7 +6,7 @@ import {
   Table, Thead, Th, Tbody, Tr, Td, EmptyState,
   BtnGhost, BtnDanger,
 } from "@/components/AdminUI";
-import { api, loadToken, type ApiError } from "@/lib/api";
+import { api, type ApiError } from "@/lib/api";
 import type { User } from "@/lib/types";
 
 export default function UsersPage() {
@@ -15,13 +15,13 @@ export default function UsersPage() {
   const [err, setErr] = useState<string | null>(null);
 
   function reload() {
-    api.get<User[]>("/users", loadToken()!).then(setUsers).catch((e: ApiError) => setErr(e.detail));
+    api.get<User[]>("/users").then(setUsers).catch((e: ApiError) => setErr(e.detail));
   }
   useEffect(() => { if (user) reload(); }, [user]);
 
   async function toggleActive(u: User) {
     try {
-      await api.patch(`/users/${u.id}`, { is_active: !u.is_active }, loadToken()!);
+      await api.patch(`/users/${u.id}`, { is_active: !u.is_active });
       reload();
     } catch (e) {
       setErr((e as ApiError).detail);
@@ -31,7 +31,7 @@ export default function UsersPage() {
   async function remove(id: number) {
     if (!confirm("¿Eliminar este usuario?")) return;
     try {
-      await api.delete(`/users/${id}`, loadToken()!);
+      await api.delete(`/users/${id}`);
       reload();
     } catch (e) {
       setErr((e as ApiError).detail);

@@ -1,21 +1,21 @@
 "use client";
 import { useEffect, useState } from "react";
-import { siteData, defaultCategories, type CatalogCategory } from "@/lib/siteData";
+import { api } from "@/lib/api";
 
-function mergeWithDefaults(stored: CatalogCategory[]): CatalogCategory[] {
-  return stored.map((cat) => {
-    const def = defaultCategories.find((d) => d.id === cat.id);
-    return { ...cat, image: cat.image || def?.image || "" };
-  });
+interface CatalogCategory {
+  id: number;
+  slug: string;
+  label: string;
+  css_class: string;
+  image: string | null;
 }
 
 export default function Categories({ onPick }: { onPick: (c: string) => void }) {
-  const [cats, setCats]     = useState<CatalogCategory[]>(defaultCategories);
+  const [cats, setCats]     = useState<CatalogCategory[]>([]);
   const [hovered, setHovered] = useState<string | null>(null);
 
   useEffect(() => {
-    const stored = siteData.getCategories();
-    setCats(mergeWithDefaults(stored));
+    api.get<CatalogCategory[]>("/catalog-categories").then(setCats).catch(() => {});
   }, []);
 
   return (
@@ -35,12 +35,12 @@ export default function Categories({ onPick }: { onPick: (c: string) => void }) 
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {cats.map((c, i) => {
-            const isHovered = hovered === c.id;
+            const isHovered = hovered === c.slug;
             return (
               <button
                 key={c.id}
-                onClick={() => onPick(c.id)}
-                onMouseEnter={() => setHovered(c.id)}
+                onClick={() => onPick(c.slug)}
+                onMouseEnter={() => setHovered(c.slug)}
                 onMouseLeave={() => setHovered(null)}
                 className="relative rounded-2xl aspect-square overflow-hidden text-left focus:outline-none"
                 style={{
@@ -68,7 +68,7 @@ export default function Categories({ onPick }: { onPick: (c: string) => void }) 
 
                 {/* Overlay degradado */}
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br ${c.cssClass}`}
+                  className={`absolute inset-0 bg-gradient-to-br ${c.css_class}`}
                   style={{
                     opacity: c.image ? (isHovered ? 0.5 : 0.6) : 1,
                     transition: "opacity 0.3s ease",

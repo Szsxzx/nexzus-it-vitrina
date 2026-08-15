@@ -2,13 +2,14 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { api, saveToken, type ApiError } from "@/lib/api";
-import type { LoginResponse } from "@/lib/types";
+import type { ApiError } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
 
 const VERSION = "2.0";
 
 export default function LoginPage() {
   const router = useRouter();
+  const login = useAuth((s) => s.login);
   const [usuario, setUsuario] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [loading, setLoading] = useState(false);
@@ -28,11 +29,7 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
     try {
-      const data = await api.post<LoginResponse>("/auth/login", {
-        usuario: usuario.trim(),
-        contrasena,
-      });
-      saveToken(data.access_token);
+      await login(usuario.trim(), contrasena);
       setSuccess(true);
       setTimeout(() => router.push("/admin/dashboard"), 1200);
     } catch (err) {

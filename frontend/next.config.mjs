@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: "export",
+  // Se corre como servidor Next.js normal dentro de Docker (ver
+  // docker-compose.yml), no como export estatico para Netlify.
   images: {
     unoptimized: true,
   },

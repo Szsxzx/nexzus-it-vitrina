@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     ENV: str = "development"
     DEBUG: bool = True
 
-    DATABASE_URL: str = "sqlite:///./dev.db"
+    DATABASE_URL: str = "postgresql+psycopg2://vitrina:vitrina@db:5432/vitrina"
 
     JWT_SECRET: str = "change-me"
     JWT_ALGORITHM: str = "HS256"

@@ -9,7 +9,7 @@ import {
   Field, Input, Textarea, Select, PriceInput,
 } from "@/components/AdminUI";
 import ImageUpload from "@/components/ImageUpload";
-import { api, loadToken, type ApiError } from "@/lib/api";
+import { api, type ApiError } from "@/lib/api";
 import type { Product, Category } from "@/lib/types";
 
 const CATEGORIES: Category[] = ["res", "cerdo", "pollo", "embutidos", "pescado"];
@@ -40,7 +40,7 @@ export default function ProductsPage() {
   const [catFilter, setCatFilter] = useState<"all" | Category>("all");
 
   function reload() {
-    api.get<Product[]>("/products?only_active=false", loadToken()!)
+    api.get<Product[]>("/products?only_active=false")
       .then(setItems)
       .catch((e: ApiError) => setErr(e.detail));
   }
@@ -57,9 +57,9 @@ export default function ProductsPage() {
       if (body.tags === "")      body.tags       = null;
       if (body.old_price === "" || body.old_price === undefined) body.old_price = null;
       if (editing.id) {
-        await api.patch(`/products/${editing.id}`, body, loadToken()!);
+        await api.patch(`/products/${editing.id}`, body);
       } else {
-        await api.post("/products", body, loadToken()!);
+        await api.post("/products", body);
       }
       setEditing(null); reload();
     } catch (e) { setErr((e as ApiError).detail); }
@@ -68,13 +68,13 @@ export default function ProductsPage() {
 
   async function remove(id: number) {
     if (!confirm("¿Eliminar este producto?")) return;
-    try { await api.delete(`/products/${id}`, loadToken()!); reload(); }
+    try { await api.delete(`/products/${id}`); reload(); }
     catch (e) { setErr((e as ApiError).detail); }
   }
 
   async function toggleActive(p: Product) {
     try {
-      await api.patch(`/products/${p.id}`, { is_active: !p.is_active }, loadToken()!);
+      await api.patch(`/products/${p.id}`, { is_active: !p.is_active });
       reload();
     } catch (e) { setErr((e as ApiError).detail); }
   }

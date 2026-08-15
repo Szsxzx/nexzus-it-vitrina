@@ -1,7 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useCart } from "@/lib/cart";
-import { siteData, defaultPromos, type PromoItem } from "@/lib/siteData";
+import { api } from "@/lib/api";
+
+interface PromoItem {
+  id: number;
+  name: string;
+  price: string;
+  old_price: string | null;
+  unit_price: number;
+  off: string;
+  color: string;
+  img: string | null;
+}
 
 const colorHex: Record<string, string> = {
   "bg-rojo":      "#8B0000",
@@ -13,14 +24,16 @@ const colorHex: Record<string, string> = {
 
 export default function Promotions() {
   const { add } = useCart();
-  const [promos, setPromos]   = useState<PromoItem[]>(defaultPromos);
-  const [hovered, setHovered] = useState<string | null>(null);
-  const [added, setAdded]     = useState<string | null>(null);
+  const [promos, setPromos]   = useState<PromoItem[]>([]);
+  const [hovered, setHovered] = useState<number | null>(null);
+  const [added, setAdded]     = useState<number | null>(null);
 
-  useEffect(() => { setPromos(siteData.getPromos()); }, []);
+  useEffect(() => {
+    api.get<PromoItem[]>("/promotions").then(setPromos).catch(() => {});
+  }, []);
 
   function handleAdd(p: PromoItem) {
-    add(p.name, p.price, parseInt(p.price.replace(/[^0-9]/g, "")) || 0);
+    add(p.name, p.price, p.unit_price);
     setAdded(p.id);
     setTimeout(() => setAdded(null), 1500);
   }
@@ -88,7 +101,7 @@ export default function Promotions() {
                 <div className="relative aspect-square overflow-hidden bg-gray-100">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={p.img}
+                    src={p.img ?? "/img/placeholder.jpg"}
                     alt={p.name}
                     className="w-full h-full object-cover"
                     style={{
@@ -108,8 +121,8 @@ export default function Promotions() {
                 <div className="p-4 flex-1 flex flex-col">
                   <div className="flex items-baseline gap-2 mb-4">
                     <span className="text-2xl font-bold text-gray-900">{p.price}</span>
-                    {p.oldPrice && (
-                      <span className="text-sm line-through text-gray-400">{p.oldPrice}</span>
+                    {p.old_price && (
+                      <span className="text-sm line-through text-gray-400">{p.old_price}</span>
                     )}
                   </div>
 

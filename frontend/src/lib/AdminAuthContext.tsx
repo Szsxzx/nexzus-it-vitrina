@@ -1,16 +1,4 @@
-"use client";
-import { createContext, useContext } from "react";
-import type { User } from "@/lib/types";
-
-export interface AdminAuthCtxValue {
-  user: User;
-  logout: () => void;
-}
-
-export const AdminAuthContext = createContext<AdminAuthCtxValue | null>(null);
-
-export function useAdminAuth(): AdminAuthCtxValue {
-  const ctx = useContext(AdminAuthContext);
-  if (!ctx) throw new Error("useAdminAuth must be used inside admin layout");
-  return ctx;
-}
+/** La sesion del admin ahora vive en un store de Zustand (src/lib/auth.ts), no
+ * en React Context. Este archivo se conserva para no tener que tocar el
+ * import de cada pagina de /admin/*. */
+export { useAdminAuth } from "@/lib/auth";

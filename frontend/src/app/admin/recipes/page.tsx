@@ -2,70 +2,82 @@
 import { useEffect, useState } from "react";
 import { useAdminAuth } from "@/lib/AdminAuthContext";
 import {
-  PageShell, PageHeader, SavedToast, Badge, EmptyState,
+  PageShell, PageHeader, SavedToast, ErrorBox, Badge, EmptyState,
   Table, Thead, Th, Tbody, Tr, Td,
   Modal, ModalBody, ModalFooter,
   BtnPrimary, BtnSecondary, BtnGhost, BtnDanger,
   SortButtons, Field, Input, Textarea,
 } from "@/components/AdminUI";
 import ImageUpload from "@/components/ImageUpload";
-import { siteData, defaultBlogs, type BlogPost } from "@/lib/siteData";
+import { api, type ApiError } from "@/lib/api";
 
-const emptyPost = (): BlogPost => ({
-  id: `receta-${Date.now()}`,
+interface BlogPost {
+  id: number;
+  title: string;
+  date: string;
+  image: string | null;
+  excerpt: string;
+  content: string;
+  sort_order: number;
+}
+
+type EditingPost = Partial<BlogPost> & { title: string; date: string };
+
+const emptyPost = (): EditingPost => ({
   title: "",
   date: new Date().toLocaleDateString("es-CO", { day: "numeric", month: "long", year: "numeric" }),
-  image: "",
-  excerpt: "",
-  content: "",
+  image: "", excerpt: "", content: "",
 });
 
 export default function RecipesPage() {
   const { user, logout } = useAdminAuth();
   const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [editing, setEditing] = useState<BlogPost | null>(null);
+  const [editing, setEditing] = useState<EditingPost | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [preview, setPreview] = useState<BlogPost | null>(null);
   const [saved, setSaved] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
   const [tab, setTab] = useState<"edit" | "preview">("edit");
 
-  useEffect(() => { setPosts(siteData.getBlogs()); }, []);
-
-  function persist(updated: BlogPost[]) {
-    setPosts(updated);
-    siteData.setBlogs(updated);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+  function reload() {
+    api.get<BlogPost[]>("/blog-posts").then(setPosts).catch((e: ApiError) => setErr(e.detail));
   }
+  useEffect(reload, []);
+
+  function flash() { setSaved(true); setTimeout(() => setSaved(false), 2000); }
 
   function openNew() { setEditing(emptyPost()); setIsNew(true); setTab("edit"); }
   function openEdit(p: BlogPost) { setEditing({ ...p }); setIsNew(false); setTab("edit"); }
 
-  function saveEditing(e: React.FormEvent) {
+  async function saveEditing(e: React.FormEvent) {
     e.preventDefault();
     if (!editing) return;
-    persist(isNew ? [...posts, editing] : posts.map((p) => p.id === editing.id ? editing : p));
-    setEditing(null);
+    try {
+      if (isNew) await api.post("/blog-posts", editing);
+      else await api.patch(`/blog-posts/${editing.id}`, editing);
+      setEditing(null);
+      reload();
+      flash();
+    } catch (e) { setErr((e as ApiError).detail); }
   }
 
-  function remove(id: string) {
+  async function remove(id: number) {
     if (!confirm("¿Eliminar esta receta?")) return;
-    persist(posts.filter((p) => p.id !== id));
+    try { await api.delete(`/blog-posts/${id}`); reload(); }
+    catch (e) { setErr((e as ApiError).detail); }
   }
 
-  function moveUp(idx: number) {
-    if (idx === 0) return;
-    const arr = [...posts];
-    [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]];
-    persist(arr);
+  async function swap(a: BlogPost, b: BlogPost) {
+    try {
+      await Promise.all([
+        api.patch(`/blog-posts/${a.id}`, { sort_order: b.sort_order }),
+        api.patch(`/blog-posts/${b.id}`, { sort_order: a.sort_order }),
+      ]);
+      reload();
+    } catch (e) { setErr((e as ApiError).detail); }
   }
-
-  function moveDown(idx: number) {
-    if (idx === posts.length - 1) return;
-    const arr = [...posts];
-    [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]];
-    persist(arr);
-  }
+  function moveUp(idx: number) { if (idx > 0) swap(posts[idx], posts[idx - 1]); }
+  function moveDown(idx: number) { if (idx < posts.length - 1) swap(posts[idx], posts[idx + 1]); }
 
   return (
       <PageShell>
@@ -75,15 +87,14 @@ export default function RecipesPage() {
           actions={
             <div className="flex items-center gap-3">
               <SavedToast visible={saved} />
-              <BtnSecondary onClick={() => { siteData.resetBlogs(); setPosts(defaultBlogs); }}>
-                Restaurar defecto
-              </BtnSecondary>
               <BtnPrimary onClick={openNew}>
                 <i className="fa-solid fa-plus text-xs" /> Nueva receta
               </BtnPrimary>
             </div>
           }
         />
+
+        <ErrorBox message={err} />
 
         <Table>
           <Thead>
