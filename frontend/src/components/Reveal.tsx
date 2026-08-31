@@ -12,6 +12,11 @@ export function useInView(threshold = 0.12) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    // Si el usuario pidió reducir movimiento, mostrar sin animar.
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      setVisible(true);
+      return;
+    }
     const obs = new IntersectionObserver(
       ([entry]) => setVisible(entry.isIntersecting),
       { threshold, rootMargin: "0px 0px -10% 0px" },

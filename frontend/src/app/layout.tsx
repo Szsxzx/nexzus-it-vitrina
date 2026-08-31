@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import HeroUIProvider from "@/components/HeroUIProvider";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://vitrina-vs15.netlify.app";
+// La URL pública real del sitio. En Netlify se define NEXT_PUBLIC_SITE_URL
+// (Site configuration → Environment variables); el fallback debe apuntar
+// siempre al dominio que está en producción ahora mismo.
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bejewelled-moxie-f32376.netlify.app";
 const SITE_NAME = "Carnicería Expendio Fuente de Vida";
 const SITE_DESC = "La mejor carne de Medellín — cortes premium 100% naturales, domicilios el mismo día. Res, cerdo, pollo y más.";
 
