@@ -26,7 +26,7 @@ interface PremiumCut {
 
 function CutCard({ c, index }: { c: PremiumCut; index: number }) {
   const { add } = useCart();
-  const { ref, visible } = useInView(0.1);
+  const { ref, visible } = useInView();
   const [btnAdded, setBtnAdded] = useState(false);
   const [imgHover, setImgHover] = useState(false);
 
@@ -118,7 +118,7 @@ function CutCard({ c, index }: { c: PremiumCut; index: number }) {
 }
 
 function SectionBlock({ s, cuts, sectionIndex }: { s: PremiumSection; cuts: PremiumCut[]; sectionIndex: number }) {
-  const { ref, visible } = useInView(0.1);
+  const { ref, visible } = useInView();
 
   return (
     <div
@@ -155,7 +155,7 @@ function SectionBlock({ s, cuts, sectionIndex }: { s: PremiumSection; cuts: Prem
 export default function PremiumCuts() {
   const [sections, setSections] = useState<PremiumSection[]>([]);
   const [cuts, setCuts]         = useState<PremiumCut[]>([]);
-  const { ref: titleRef, visible: titleVisible } = useInView(0.2);
+  const { ref: titleRef, visible: titleVisible } = useInView();
 
   useEffect(() => {
     api.get<PremiumSection[]>("/premium-sections").then(setSections).catch(() => {});
