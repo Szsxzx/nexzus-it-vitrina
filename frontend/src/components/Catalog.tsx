@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "@/lib/api";
 import type { Product, Category } from "@/lib/types";
 import { useCart } from "@/lib/cart";
+import Reveal from "@/components/Reveal";
 
 const filters: { id: "all" | Category; label: string; icon: string; emoji: string }[] = [
   { id: "all",       label: "Todos",     icon: "fa-border-all",     emoji: "🥩" },
@@ -68,7 +69,7 @@ export default function Catalog({ activeFilter, onFilter }: {
     <section id="products" className="container mx-auto px-4 py-12">
 
       {/* Título */}
-      <div className="text-center mb-10">
+      <Reveal className="text-center mb-10">
         <div className="flex items-center justify-center gap-3 mb-3">
           <div className="h-px w-10 bg-rojo opacity-40" />
           <span className="text-xs font-semibold uppercase tracking-widest text-azul">Selección del día</span>
@@ -76,7 +77,7 @@ export default function Catalog({ activeFilter, onFilter }: {
         </div>
         <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900">Catálogo de Productos</h2>
         <div className="mt-3 mx-auto w-12 h-0.5 rounded-full bg-rojo opacity-60" />
-      </div>
+      </Reveal>
 
       {/* ── Barra de filtros ── */}
       <div className="flex flex-col items-center gap-4 mb-10">
@@ -228,16 +229,16 @@ export default function Catalog({ activeFilter, onFilter }: {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {visible.map((p) => {
+          {visible.map((p, i) => {
             const priceStr    = fmtCOP.format(p.price);
             const oldPriceStr = p.old_price ? fmtCOP.format(p.old_price) : null;
             const imgSrc      = p.image_url || "/img/placeholder.jpg";
             const tags        = p.tags ? p.tags.split(",").map((t) => t.trim()).filter(Boolean) : [];
 
             return (
+              <Reveal key={p.slug} className="h-full" delay={Math.min(i, 7) * 0.06}>
               <article
-                key={p.slug}
-                className="bg-white rounded-2xl overflow-hidden border flex flex-col group"
+                className="bg-white rounded-2xl overflow-hidden border flex flex-col group h-full"
                 style={{
                   boxShadow: "0 1px 4px rgba(0,0,0,0.07)",
                   transition: "transform 0.25s ease, box-shadow 0.25s ease",
@@ -309,6 +310,7 @@ export default function Catalog({ activeFilter, onFilter }: {
                   )}
                 </div>
               </article>
+              </Reveal>
             );
           })}
 

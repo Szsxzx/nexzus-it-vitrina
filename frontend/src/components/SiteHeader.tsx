@@ -67,7 +67,11 @@ export default function SiteHeader() {
     <header
       className={[
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled ? "bg-white/90 backdrop-blur shadow-sm" : "bg-transparent",
+        scrolled
+          ? "bg-white/90 backdrop-blur shadow-sm"
+          : open
+            ? "bg-negro/95 backdrop-blur"
+            : "bg-transparent",
         hidden ? "-translate-y-full" : "translate-y-0",
       ].join(" ")}
     >
@@ -129,9 +133,17 @@ export default function SiteHeader() {
         <div className="w-10 hidden md:block" />
       </div>
 
-      {/* Menú móvil */}
+      {/* Menú móvil — sobre el banner va oscuro para no desentonar;
+          al bajar (scrolled) pasa a blanco como el resto del header. */}
       {open && (
-        <ul className="md:hidden bg-white border-t shadow-lg flex flex-col">
+        <ul
+          className={[
+            "md:hidden border-t flex flex-col transition-colors duration-300",
+            isDark
+              ? "bg-negro/95 backdrop-blur border-white/10"
+              : "bg-white border-gray-200 shadow-lg",
+          ].join(" ")}
+        >
           {links.map((l) => {
             const isActive = active === l.section;
             return (
@@ -139,7 +151,12 @@ export default function SiteHeader() {
                 <a
                   href={l.href}
                   onClick={() => setOpen(false)}
-                  className="block px-5 py-3 border-b text-negro hover:bg-gray-50 text-sm transition-colors"
+                  className={[
+                    "block px-5 py-3 border-b text-sm transition-colors",
+                    isDark
+                      ? "text-white/90 border-white/10 hover:bg-white/10"
+                      : "text-negro border-gray-100 hover:bg-gray-50",
+                  ].join(" ")}
                   style={{ borderLeft: isActive ? "3px solid #8B0000" : "3px solid transparent" }}
                 >
                   {l.label}

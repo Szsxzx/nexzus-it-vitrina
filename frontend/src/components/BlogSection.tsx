@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import Reveal from "@/components/Reveal";
 
 interface BlogPost {
   id: number;
@@ -31,7 +32,7 @@ export default function BlogSection() {
         <div className="container mx-auto px-4">
 
           {/* Encabezado */}
-          <div className="text-center mb-12">
+          <Reveal className="text-center mb-12">
             <span className="inline-block text-xs font-semibold uppercase tracking-widest text-rojo mb-2">
               Del experto para ti
             </span>
@@ -39,14 +40,14 @@ export default function BlogSection() {
               Consejos y Recetas
             </h2>
             <div className="mt-3 mx-auto w-12 h-0.5 bg-rojo rounded-full" />
-          </div>
+          </Reveal>
 
           {/* Grid de tarjetas */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
             {blogs.map((b, i) => (
+              <Reveal key={b.id} className="h-full" delay={Math.min(i, 7) * 0.06}>
               <article
-                key={b.id}
-                className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col"
+                className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col h-full"
                 onClick={() => setOpen(b)}
               >
                 {/* Imagen */}
@@ -86,6 +87,7 @@ export default function BlogSection() {
                   </div>
                 </div>
               </article>
+              </Reveal>
             ))}
           </div>
         </div>

@@ -1,7 +1,8 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "@/lib/cart";
 import { api } from "@/lib/api";
+import { useInView } from "@/components/Reveal";
 
 interface PremiumSection {
   id: number;
@@ -21,23 +22,6 @@ interface PremiumCut {
   badge: string | null;
   badge_color: string;
   text: string | null;
-}
-
-/** Hook: dispara cuando el elemento entra al viewport */
-function useInView(threshold = 0.15) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
-      { threshold }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [threshold]);
-  return { ref, visible };
 }
 
 function CutCard({ c, index }: { c: PremiumCut; index: number }) {

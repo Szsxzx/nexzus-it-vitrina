@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useCart } from "@/lib/cart";
 import { api } from "@/lib/api";
+import Reveal from "@/components/Reveal";
 
 interface PromoItem {
   id: number;
@@ -45,7 +46,7 @@ export default function Promotions() {
       <div className="container mx-auto px-4">
 
         {/* Encabezado */}
-        <div className="text-center mb-12">
+        <Reveal className="text-center mb-12">
           <span className="inline-block text-xs font-semibold uppercase tracking-widest text-rojo mb-2">
             Ofertas limitadas
           </span>
@@ -53,20 +54,20 @@ export default function Promotions() {
             Promociones Especiales
           </h2>
           <div className="mt-3 mx-auto w-12 h-0.5 bg-rojo rounded-full" />
-        </div>
+        </Reveal>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {promos.map((p) => {
+          {promos.map((p, i) => {
             const isHovered = hovered === p.id;
             const isAdded   = added   === p.id;
             const color     = hex(p.color);
 
             return (
+              <Reveal key={p.id} className="h-full" delay={Math.min(i, 7) * 0.06}>
               <div
-                key={p.id}
                 onMouseEnter={() => setHovered(p.id)}
                 onMouseLeave={() => setHovered(null)}
-                className="bg-white rounded-2xl overflow-hidden flex flex-col"
+                className="bg-white rounded-2xl overflow-hidden flex flex-col h-full"
                 style={{
                   border: `1.5px solid ${isHovered ? color : "#f0f0f0"}`,
                   boxShadow: isHovered
@@ -143,6 +144,7 @@ export default function Promotions() {
                   </button>
                 </div>
               </div>
+              </Reveal>
             );
           })}
         </div>
