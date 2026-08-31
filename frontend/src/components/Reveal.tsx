@@ -1,7 +1,11 @@
 "use client";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 
-/** Hook: se activa una sola vez cuando el elemento entra al viewport */
+/**
+ * Hook: `visible` sigue en tiempo real si el elemento está o no dentro del
+ * viewport. Así la animación se repite cada vez que se hace scroll hacia la
+ * sección (no solo la primera vez).
+ */
 export function useInView(threshold = 0.12) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -9,13 +13,8 @@ export function useInView(threshold = 0.12) {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
-      { threshold },
+      ([entry]) => setVisible(entry.isIntersecting),
+      { threshold, rootMargin: "0px 0px -10% 0px" },
     );
     obs.observe(el);
     return () => obs.disconnect();
