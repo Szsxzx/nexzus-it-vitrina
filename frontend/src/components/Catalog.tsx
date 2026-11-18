@@ -5,12 +5,13 @@ import type { Product, Category } from "@/lib/types";
 import { useCart } from "@/lib/cart";
 import Reveal from "@/components/Reveal";
 
-const filters: { id: "all" | Category; label: string; icon: string; emoji: string }[] = [
-  { id: "all",       label: "Todos",     icon: "fa-border-all",     emoji: "🥩" },
-  { id: "res",       label: "Res",       icon: "fa-cow",            emoji: "🐄" },
-  { id: "cerdo",     label: "Cerdo",     icon: "fa-piggy-bank",     emoji: "🐷" },
-  { id: "pollo",     label: "Pollo",     icon: "fa-drumstick-bite", emoji: "🍗" },
-  { id: "embutidos", label: "Embutidos", icon: "fa-fire-burner",    emoji: "🌭" },
+const filters: { id: "all" | Category; label: string; icon: string }[] = [
+  { id: "all",        label: "Todos",      icon: "fa-border-all" },
+  { id: "software",   label: "Software",   icon: "fa-code" },
+  { id: "hardware",   label: "Hardware",   icon: "fa-server" },
+  { id: "licencias",  label: "Licencias",  icon: "fa-key" },
+  { id: "redes",      label: "Redes",      icon: "fa-network-wired" },
+  { id: "accesorios", label: "Accesorios", icon: "fa-keyboard" },
 ];
 
 const fmtCOP = new Intl.NumberFormat("es-CO", {
@@ -71,12 +72,12 @@ export default function Catalog({ activeFilter, onFilter }: {
       {/* Título */}
       <Reveal className="text-center mb-10">
         <div className="flex items-center justify-center gap-3 mb-3">
-          <div className="h-px w-10 bg-rojo opacity-40" />
-          <span className="text-xs font-semibold uppercase tracking-widest text-azul">Selección del día</span>
-          <div className="h-px w-10 bg-rojo opacity-40" />
+          <div className="h-px w-10 bg-accent opacity-40" />
+          <span className="text-xs font-semibold uppercase tracking-widest text-secondary">Selección destacada</span>
+          <div className="h-px w-10 bg-accent opacity-40" />
         </div>
-        <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900">Catálogo de Productos</h2>
-        <div className="mt-3 mx-auto w-12 h-0.5 rounded-full bg-rojo opacity-60" />
+        <h2 className="text-3xl md:text-4xl font-heading font-bold text-gray-900">Catálogo de Productos</h2>
+        <div className="mt-3 mx-auto w-12 h-0.5 rounded-full bg-accent opacity-60" />
       </Reveal>
 
       {/* ── Barra de filtros ── */}
@@ -100,16 +101,16 @@ export default function Catalog({ activeFilter, onFilter }: {
                 onClick={() => onFilter(f.id)}
                 className="relative inline-flex flex-col items-center gap-0.5 px-4 py-2.5 rounded-xl text-xs font-semibold select-none transition-all duration-200"
                 style={{
-                  background: isActive ? "#8B0000" : "transparent",
+                  background: isActive ? "#7C3AED" : "transparent",
                   color: isActive ? "#fff" : "#777",
-                  boxShadow: isActive ? "0 4px 14px rgba(139,0,0,0.3)" : "none",
+                  boxShadow: isActive ? "0 4px 14px rgba(124,58,237,0.3)" : "none",
                   transform: isActive ? "scale(1.04)" : "scale(1)",
                   minWidth: "64px",
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive) {
-                    (e.currentTarget as HTMLElement).style.background = "rgba(139,0,0,0.06)";
-                    (e.currentTarget as HTMLElement).style.color = "#8B0000";
+                    (e.currentTarget as HTMLElement).style.background = "rgba(124,58,237,0.06)";
+                    (e.currentTarget as HTMLElement).style.color = "#7C3AED";
                   }
                 }}
                 onMouseLeave={(e) => {
@@ -119,7 +120,7 @@ export default function Catalog({ activeFilter, onFilter }: {
                   }
                 }}
               >
-                <span className="text-base leading-none">{f.emoji}</span>
+                <i className={`fa-solid ${f.icon} text-base leading-none`} />
                 <span className="leading-none">{f.label}</span>
                 {!loading && (
                   <span
@@ -139,15 +140,15 @@ export default function Catalog({ activeFilter, onFilter }: {
           className="relative flex items-center w-full max-w-sm"
           style={{
             background: "#fff",
-            border: `1.5px solid ${focused ? "#8B0000" : "#e8e8e8"}`,
+            border: `1.5px solid ${focused ? "#7C3AED" : "#e8e8e8"}`,
             borderRadius: "9999px",
-            boxShadow: focused ? "0 0 0 3px rgba(139,0,0,0.08), 0 2px 8px rgba(0,0,0,0.06)" : "0 2px 8px rgba(0,0,0,0.05)",
+            boxShadow: focused ? "0 0 0 3px rgba(124,58,237,0.08), 0 2px 8px rgba(0,0,0,0.06)" : "0 2px 8px rgba(0,0,0,0.05)",
             transition: "all 0.2s ease",
           }}
         >
           <i
             className="fa-solid fa-magnifying-glass absolute left-4 text-xs"
-            style={{ color: focused ? "#8B0000" : "#bbb", transition: "color 0.2s" }}
+            style={{ color: focused ? "#7C3AED" : "#bbb", transition: "color 0.2s" }}
           />
           <input
             type="search"
@@ -164,7 +165,7 @@ export default function Catalog({ activeFilter, onFilter }: {
               onClick={() => setSearch("")}
               className="absolute right-4 w-4 h-4 rounded-full flex items-center justify-center transition-all"
               style={{ background: "#ddd", color: "#666" }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "#8B0000"; (e.currentTarget as HTMLElement).style.color = "#fff"; }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "#7C3AED"; (e.currentTarget as HTMLElement).style.color = "#fff"; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "#ddd"; (e.currentTarget as HTMLElement).style.color = "#666"; }}
             >
               <i className="fa-solid fa-xmark text-[9px]" />
@@ -232,7 +233,7 @@ export default function Catalog({ activeFilter, onFilter }: {
           {visible.map((p, i) => {
             const priceStr    = fmtCOP.format(p.price);
             const oldPriceStr = p.old_price ? fmtCOP.format(p.old_price) : null;
-            const imgSrc      = p.image_url || "/img/placeholder.jpg";
+            const imgSrc      = p.image_url || "/img/placeholder.svg";
             const tags        = p.tags ? p.tags.split(",").map((t) => t.trim()).filter(Boolean) : [];
 
             return (
@@ -258,10 +259,10 @@ export default function Catalog({ activeFilter, onFilter }: {
                     src={imgSrc}
                     alt={p.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    onError={(e) => { e.currentTarget.src = "/img/placeholder.jpg"; }}
+                    onError={(e) => { e.currentTarget.src = "/img/placeholder.svg"; }}
                   />
                   {p.discount && (
-                    <span className="absolute top-3 left-3 bg-rojo text-white text-xs px-2.5 py-1 rounded-full font-semibold">
+                    <span className="absolute top-3 left-3 bg-accent text-white text-xs px-2.5 py-1 rounded-full font-semibold">
                       {p.discount}
                     </span>
                   )}
@@ -276,15 +277,15 @@ export default function Catalog({ activeFilter, onFilter }: {
 
                   <div className="flex items-center justify-between mt-4">
                     <button
-                      onClick={() => add(p.name, priceStr, p.price)}
+                      onClick={() => add(p.name, priceStr, p.price, p.id)}
                       className="w-9 h-9 rounded-full text-white flex items-center justify-center transition-all duration-200"
-                      style={{ background: "#8B0000" }}
+                      style={{ background: "#7C3AED" }}
                       onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLElement).style.background = "#6b0000";
+                        (e.currentTarget as HTMLElement).style.background = "#6D28D9";
                         (e.currentTarget as HTMLElement).style.transform = "scale(1.1)";
                       }}
                       onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.background = "#8B0000";
+                        (e.currentTarget as HTMLElement).style.background = "#7C3AED";
                         (e.currentTarget as HTMLElement).style.transform = "scale(1)";
                       }}
                       aria-label={`Añadir ${p.name}`}

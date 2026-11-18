@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { api } from "@/lib/api";
 
 interface FooterData {
@@ -13,13 +14,13 @@ interface FooterData {
 }
 
 const defaultFooter: FooterData = {
-  address: "Carrera 76 #20f-107, Barrio París, Medellín",
-  phone: "316 401 3230",
-  email: "contacto@fuentedevida.co",
-  whatsappNumber: "573164013230",
-  scheduleWeek: "Lunes a Sábado: 7am – 8pm",
-  scheduleSunday: "Domingos: 8am – 2pm",
-  copyright: "Carnicería Expendio Fuente de Vida — Todos los derechos reservados.",
+  address: "Bogotá, Colombia",
+  phone: "+57 300 000 0000",
+  email: "contacto@nexzusit.com",
+  whatsappNumber: "573000000000",
+  scheduleWeek: "Lunes a viernes: 8:00 am – 6:00 pm",
+  scheduleSunday: "Sábados: 9:00 am – 1:00 pm",
+  copyright: "NEXZUS IT SERVICE — Todos los derechos reservados.",
 };
 
 interface SettingsOut {
@@ -45,7 +46,7 @@ function FooterLink({
       <span
         className="h-[2px] rounded-full transition-transform duration-200 origin-left"
         style={{
-          background: "#8B0000",
+          background: "#7C3AED",
           transform: hovered ? "scaleX(1)" : "scaleX(0)",
         }}
       />
@@ -67,17 +68,17 @@ export default function SiteFooter() {
   }, []);
 
   return (
-    <footer id="contact" className="bg-negro text-white mt-12">
+    <footer id="contact" className="bg-primary text-white mt-12">
       <div className="container mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
 
         {/* Contacto */}
         <div>
-          <h3 className="font-serif text-xl mb-4">Información de Contacto</h3>
+          <h3 className="font-heading text-xl mb-4">Información de Contacto</h3>
           <ul className="text-sm space-y-2 text-white/75">
-            <li>📍 {data.address}</li>
-            <li>📞 {data.phone}</li>
+            <li><i className="fa-solid fa-location-dot w-4 mr-1.5 text-accent-light" /> {data.address}</li>
+            <li><i className="fa-solid fa-phone w-4 mr-1.5 text-accent-light" /> {data.phone}</li>
             <li>
-              📧{" "}
+              <i className="fa-solid fa-envelope w-4 mr-1.5 text-accent-light" />{" "}
               <FooterLink href={`mailto:${data.email}`}>{data.email}</FooterLink>
             </li>
           </ul>
@@ -88,7 +89,7 @@ export default function SiteFooter() {
                 href="#"
                 className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200"
                 style={{ background: "rgba(255,255,255,0.1)" }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "#8B0000")}
+                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "#7C3AED")}
                 onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.1)")}
                 aria-label={s}
               >
@@ -100,22 +101,22 @@ export default function SiteFooter() {
 
         {/* Servicios */}
         <div>
-          <h3 className="font-serif text-xl mb-4">Servicios</h3>
+          <h3 className="font-heading text-xl mb-4">Servicios</h3>
           <ul className="text-sm space-y-2 text-white/75">
             <li>
-              🛒{" "}
+              <i className="fa-solid fa-cart-shopping w-4 mr-1.5 text-accent-light" />{" "}
               <FooterLink href={`https://wa.me/${data.whatsappNumber}`} external>
                 Pedidos por WhatsApp
               </FooterLink>
             </li>
-            <li>🚚 Domicilios el mismo día</li>
-            <li>📅 Reservas para eventos o cortes especiales</li>
+            <li><i className="fa-solid fa-truck w-4 mr-1.5 text-accent-light" /> Envíos a todo Colombia</li>
+            <li><i className="fa-solid fa-headset w-4 mr-1.5 text-accent-light" /> Soporte técnico y asesoría</li>
           </ul>
         </div>
 
         {/* Horarios */}
         <div>
-          <h3 className="font-serif text-xl mb-4">Horarios</h3>
+          <h3 className="font-heading text-xl mb-4">Horarios</h3>
           <ul className="text-sm text-white/75 space-y-2">
             <li>{data.scheduleWeek}</li>
             <li>{data.scheduleSunday}</li>
@@ -124,7 +125,19 @@ export default function SiteFooter() {
       </div>
 
       <div className="border-t py-4 text-center text-xs" style={{ borderColor: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.4)" }}>
-        © {new Date().getFullYear()} {data.copyright}
+        <div className="container mx-auto px-4 flex flex-col items-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
+            <Link href="/pqr" className="hover:text-white transition-colors">PQR</Link>
+            <Link href="/pqr#datos" className="hover:text-white transition-colors">Política de tratamiento de datos</Link>
+          </div>
+          <div className="flex items-center gap-3 text-lg" aria-label="Medios de pago">
+            <i className="fa-brands fa-cc-visa" aria-hidden="true" />
+            <i className="fa-brands fa-cc-mastercard" aria-hidden="true" />
+            <i className="fa-brands fa-cc-amex" aria-hidden="true" />
+            <span className="text-[11px] font-bold tracking-wider">PSE</span>
+          </div>
+          <div>© {new Date().getFullYear()} {data.copyright}</div>
+        </div>
       </div>
     </footer>
   );

@@ -19,13 +19,13 @@ interface FooterData {
 }
 
 const defaultFooter: FooterData = {
-  address: "Carrera 76 #20f-107, Barrio París, Medellín",
-  phone: "316 401 3230",
-  email: "contacto@fuentedevida.co",
-  whatsappNumber: "573164013230",
-  scheduleWeek: "Lunes a Sábado: 7am – 8pm",
-  scheduleSunday: "Domingos: 8am – 2pm",
-  copyright: "Carnicería Expendio Fuente de Vida — Todos los derechos reservados.",
+  address: "Bogotá, Colombia",
+  phone: "+57 300 000 0000",
+  email: "contacto@nexzusit.com",
+  whatsappNumber: "573000000000",
+  scheduleWeek: "Lunes a viernes: 8:00 am – 6:00 pm",
+  scheduleSunday: "Sábados: 9:00 am – 1:00 pm",
+  copyright: "NEXZUS IT SERVICE — NIT 000.000.000-0. Todos los derechos reservados.",
 };
 
 interface SettingsOut {
@@ -83,7 +83,7 @@ export default function FooterPage() {
           subtitle="Contacto, horarios y copyright"
           actions={
             <a
-              href="/#contact"
+              href="/#contacto"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium text-gray-500 bg-white border border-gray-200 hover:border-gray-300 hover:text-gray-800 transition-all"
@@ -103,7 +103,7 @@ export default function FooterPage() {
                 <Input
                   value={form.address}
                   onChange={(e) => setForm({ ...form, address: e.target.value })}
-                  placeholder="Carrera 76 #20f-107, Medellín"
+                  placeholder="Bogotá, Colombia"
                 />
               </Field>
               <div className="grid grid-cols-2 gap-3">
@@ -111,14 +111,14 @@ export default function FooterPage() {
                   <Input
                     value={form.phone}
                     onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                    placeholder="316 401 3230"
+                    placeholder="+57 300 000 0000"
                   />
                 </Field>
                 <Field label="WhatsApp (con código país)">
                   <Input
                     value={form.whatsappNumber}
                     onChange={(e) => setForm({ ...form, whatsappNumber: e.target.value })}
-                    placeholder="573164013230"
+                    placeholder="573000000000"
                   />
                 </Field>
               </div>
@@ -133,18 +133,18 @@ export default function FooterPage() {
 
             {/* Horarios */}
             <Card title="Horarios de atención" icon="fa-clock" className="p-6 space-y-4">
-              <Field label="Lunes a Sábado">
+              <Field label="Lunes a viernes">
                 <Input
                   value={form.scheduleWeek}
                   onChange={(e) => setForm({ ...form, scheduleWeek: e.target.value })}
-                  placeholder="Lunes a Sábado: 7am – 8pm"
+                  placeholder="Lunes a viernes: 8:00 am – 6:00 pm"
                 />
               </Field>
-              <Field label="Domingos">
+              <Field label="Sábados">
                 <Input
                   value={form.scheduleSunday}
                   onChange={(e) => setForm({ ...form, scheduleSunday: e.target.value })}
-                  placeholder="Domingos: 8am – 2pm"
+                  placeholder="Sábados: 9:00 am – 1:00 pm"
                 />
               </Field>
             </Card>
@@ -174,27 +174,27 @@ export default function FooterPage() {
         {/* Vista previa del footer */}
         <div className="mt-8">
           <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Vista previa</p>
-          <div className="rounded-2xl overflow-hidden" style={{ background: "#141414" }}>
+          <div className="rounded-2xl overflow-hidden" style={{ background: "#0B0712" }}>
             <div className="px-8 py-8 grid grid-cols-3 gap-6 text-sm">
               <div>
-                <p className="font-serif text-base text-white mb-3">Información de Contacto</p>
-                <ul className="space-y-1.5 text-xs" style={{ color: "#888" }}>
-                  <li>📍 {form.address}</li>
-                  <li>📞 {form.phone}</li>
-                  <li>📧 {form.email}</li>
+                <p className="font-heading text-base text-white mb-3">Información de Contacto</p>
+                <ul className="space-y-1.5 text-xs" style={{ color: "#A78BFA" }}>
+                  <li>{form.address}</li>
+                  <li>{form.phone}</li>
+                  <li>{form.email}</li>
                 </ul>
               </div>
               <div>
-                <p className="font-serif text-base text-white mb-3">Servicios</p>
-                <ul className="space-y-1.5 text-xs" style={{ color: "#888" }}>
-                  <li>🛒 Pedidos por WhatsApp</li>
-                  <li>🚚 Domicilios el mismo día</li>
-                  <li>📅 Reservas para eventos</li>
+                <p className="font-heading text-base text-white mb-3">Servicios</p>
+                <ul className="space-y-1.5 text-xs" style={{ color: "#A78BFA" }}>
+                  <li>Pedidos por WhatsApp</li>
+                  <li>Envíos a toda Colombia</li>
+                  <li>Soporte técnico</li>
                 </ul>
               </div>
               <div>
-                <p className="font-serif text-base text-white mb-3">Horarios</p>
-                <ul className="space-y-1.5 text-xs" style={{ color: "#888" }}>
+                <p className="font-heading text-base text-white mb-3">Horarios</p>
+                <ul className="space-y-1.5 text-xs" style={{ color: "#A78BFA" }}>
                   <li>{form.scheduleWeek}</li>
                   <li>{form.scheduleSunday}</li>
                 </ul>

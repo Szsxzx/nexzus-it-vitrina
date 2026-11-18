@@ -1,41 +1,33 @@
-"use client";
-import { useState } from "react";
-
 import SiteHeader from "@/components/SiteHeader";
-import Banner from "@/components/Banner";
-import Features from "@/components/Features";
-import Categories from "@/components/Categories";
-import Catalog from "@/components/Catalog";
-import PremiumCuts from "@/components/PremiumCuts";
-import Promotions from "@/components/Promotions";
-import BlogSection from "@/components/BlogSection";
 import SiteFooter from "@/components/SiteFooter";
-import WhatsAppCart from "@/components/WhatsAppCart";
-import { CartProvider } from "@/lib/cart";
-import type { Category } from "@/lib/types";
+import TrustStrip from "@/components/home/TrustStrip";
+import Hero from "@/components/home/Hero";
+import About from "@/components/home/About";
+import Services from "@/components/home/Services";
+import MissionVision from "@/components/home/MissionVision";
+import WhyUs from "@/components/home/WhyUs";
+import Brands from "@/components/home/Brands";
+import Testimonials from "@/components/home/Testimonials";
+import PqrCta from "@/components/home/PqrCta";
+import Contact from "@/components/home/Contact";
 
 export default function Home() {
-  const [filter, setFilter] = useState<"all" | Category>("all");
-
-  function pickCategory(c: string) {
-    setFilter(c as "all" | Category);
-    document.getElementById("products")?.scrollIntoView({ behavior: "smooth" });
-  }
-
   return (
-    <CartProvider>
+    <>
       <SiteHeader />
-      <Banner />
       <main>
-        <Features />
-        <Categories onPick={pickCategory} />
-        <Catalog activeFilter={filter} onFilter={setFilter} />
-        <PremiumCuts />
-        <Promotions />
-        <BlogSection />
+        <Hero />
+        <TrustStrip />
+        <About />
+        <Services />
+        <MissionVision />
+        <WhyUs />
+        <Brands />
+        <Testimonials />
+        <PqrCta />
+        <Contact />
       </main>
       <SiteFooter />
-      <WhatsAppCart />
-    </CartProvider>
+    </>
   );
 }

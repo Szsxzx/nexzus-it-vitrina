@@ -8,8 +8,8 @@ import type { DashboardStats } from "@/lib/types";
 const fmtCOP = new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 });
 
 const CARDS = (s: DashboardStats) => [
-  { label: "Productos activos",  value: `${s.products_active}/${s.products_count}`, sub: "en catálogo",        icon: "fa-box",             bg: "#8B0000", light: "#8B000015" },
-  { label: "Pedidos totales",    value: s.orders_total,                              sub: `${s.orders_pending} pendientes`, icon: "fa-clipboard-list", bg: "#3AA8C1", light: "#3AA8C115" },
+  { label: "Productos activos",  value: `${s.products_active}/${s.products_count}`, sub: "en catálogo",        icon: "fa-box",             bg: "#7C3AED", light: "#7C3AED15" },
+  { label: "Pedidos totales",    value: s.orders_total,                              sub: `${s.orders_pending} pendientes`, icon: "fa-clipboard-list", bg: "#7C3AED", light: "#7C3AED15" },
   { label: "Pedidos hoy",        value: s.orders_today,                              sub: "últimas 24h",        icon: "fa-calendar-day",    bg: "#d97706", light: "#d9770615" },
   { label: "Ventas hoy",         value: fmtCOP.format(s.sales_today),                sub: "excluye cancelados", icon: "fa-arrow-trend-up",  bg: "#059669", light: "#05966915" },
   { label: "Ventas totales",     value: fmtCOP.format(s.sales_total),                sub: "histórico",          icon: "fa-chart-line",      bg: "#0d9488", light: "#0d948815" },
@@ -81,10 +81,10 @@ export default function DashboardPage() {
       <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {[
           { href: "/admin/banner",        label: "Banner",          icon: "fa-image" },
-          { href: "/admin/promotions",    label: "Promociones",     icon: "fa-percent" },
+          { href: "/admin/promotions",    label: "Ofertas",          icon: "fa-percent" },
           { href: "/admin/catalog",       label: "Catálogo",        icon: "fa-tags" },
-          { href: "/admin/premium-cuts",  label: "Cortes Premium",  icon: "fa-cow" },
-          { href: "/admin/recipes",       label: "Recetas",         icon: "fa-book-open" },
+          { href: "/admin/premium-cuts",  label: "Soluciones destacadas",  icon: "fa-star" },
+          { href: "/admin/recipes",       label: "Blog",         icon: "fa-book-open" },
           { href: "/admin/footer",        label: "Pie de página",   icon: "fa-grip-lines" },
         ].map((q) => (
           <a
@@ -94,7 +94,7 @@ export default function DashboardPage() {
           >
             <span
               className="w-9 h-9 rounded-xl flex items-center justify-center text-sm group-hover:scale-110 transition-transform"
-              style={{ background: "#8B000012", color: "#8B0000" }}
+              style={{ background: "#7C3AED12", color: "#7C3AED" }}
             >
               <i className={`fa-solid ${q.icon}`} />
             </span>

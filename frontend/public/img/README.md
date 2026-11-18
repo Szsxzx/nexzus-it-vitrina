@@ -1,19 +1,9 @@
-# Coloca aquí las imágenes del catálogo
+# Imágenes de NEXZUS IT SERVICE
+- `logo-nexzus.png`: logo oficial (1024x1024). Favicon, header, footer y hero.
 
-Archivos esperados (referenciados en `src/lib/data/products.ts` y componentes):
+Todas son SVG propios (paleta del design system):
 
-```
-banner.jpg
-lomo-fino.jpg          tomahawk.jpg          carne-molida.jpg
-chuleta-cerdo.jpg      costillas-bbq.jpg
-pechuga-pollo.jpg      alitas-picantes.jpg
-chorizos.jpg           t-bone.jpg            paquete-familiar.jpg
-
-blog-cocinar-carne.jpg blog-cortes.jpg       blog-marinar.jpg
-blog-asado.jpg         blog-higiene.jpg      blog-receta-hamburguesa.jpg
-
-placeholder.jpg        # ← fallback automático cuando una imagen no carga
-```
-
-Si una imagen no existe, los componentes hacen `onError → /img/placeholder.jpg`,
-así que basta con tener al menos `placeholder.jpg` para evitar iconos rotos.
+- `cat-<slug>.svg`: tarjetas de categoría (software, hardware, licencias, redes, accesorios).
+- `products/*.svg`: imágenes de ejemplo de productos.
+- `og-image.svg`: imagen para redes sociales (algunos rastreadores solo aceptan PNG/JPG; exportar a PNG 1200x630 para producción).
+- `placeholder.jpg` / `placeholder.svg`: respaldo cuando una imagen no carga.

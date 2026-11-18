@@ -1,21 +1,22 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const links = [
-  { href: "#top",        label: "Inicio",           section: "top" },
-  { href: "#categories", label: "Cortes",            section: "categories" },
-  { href: "#products",   label: "Productos",         section: "products" },
-  { href: "#premium",    label: "Premium",           section: "premium" },
-  { href: "#promotions", label: "Promociones",       section: "promotions" },
-  { href: "#blog",       label: "Consejos",          section: "blog" },
-  { href: "#contact",    label: "Contacto",          section: "contact" },
+  { href: "/",          label: "Inicio" },
+  { href: "/#nosotros", label: "Nosotros" },
+  { href: "/#servicios", label: "Servicios" },
+  { href: "/tienda",    label: "Tienda" },
+  { href: "/pqr",       label: "PQR" },
+  { href: "/#contacto", label: "Contacto" },
 ];
 
 export default function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden,   setHidden]   = useState(false);
   const [open,     setOpen]     = useState(false);
-  const [active,   setActive]   = useState("top");
+  const pathname = usePathname();
   const [hovered,  setHovered]  = useState<string | null>(null);
 
   // Ocultar/mostrar + fondo al hacer scroll
@@ -39,38 +40,21 @@ export default function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Scroll-spy
-  useEffect(() => {
-    const ids = links.map((l) => l.section).filter((s) => s !== "top");
-    const observers: IntersectionObserver[] = [];
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const obs = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActive(id); },
-        { rootMargin: "-40% 0px -55% 0px" }
-      );
-      obs.observe(el);
-      observers.push(obs);
-    });
-    const onTop = () => { if (window.scrollY < 120) setActive("top"); };
-    window.addEventListener("scroll", onTop, { passive: true });
-    return () => {
-      observers.forEach((o) => o.disconnect());
-      window.removeEventListener("scroll", onTop);
-    };
-  }, []);
-
-  const isDark = !scrolled; // sobre el banner: fondo oscuro → texto blanco
+  const isActiveHref = (href: string) => (href === "/" ? pathname === "/" : href.startsWith("/#") ? false : pathname.startsWith(href));
+  // El home y /tienda arrancan con un hero oscuro detrás del header; el resto
+  // de páginas (PQR, checkout) son claras, así que ahí el header es sólido.
+  const overDarkBanner = pathname === "/" || pathname === "/tienda";
+  const solid = scrolled || !overDarkBanner;
+  const isDark = !solid; // sobre el banner: fondo oscuro → texto blanco
 
   return (
     <header
       className={[
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled
+        solid
           ? "bg-white/90 backdrop-blur shadow-sm"
           : open
-            ? "bg-negro/95 backdrop-blur"
+            ? "bg-primary/95 backdrop-blur"
             : "bg-transparent",
         hidden ? "-translate-y-full" : "translate-y-0",
       ].join(" ")}
@@ -84,7 +68,7 @@ export default function SiteHeader() {
           aria-label="Menú"
         >
           {[0, 1, 2].map((i) => (
-            <span key={i} className={`w-6 h-0.5 block ${isDark ? "bg-white" : "bg-negro"}`} />
+            <span key={i} className={`w-6 h-0.5 block ${isDark ? "bg-white" : "bg-primary"}`} />
           ))}
         </button>
 
@@ -92,28 +76,28 @@ export default function SiteHeader() {
         <nav className="hidden md:block">
           <ul className="flex">
             {links.map((l) => {
-              const isActive  = active  === l.section;
-              const isHovered = hovered === l.section;
+              const isActive  = isActiveHref(l.href);
+              const isHovered = hovered === l.href;
               const showLine  = isActive || isHovered;
               return (
                 <li key={l.href}>
-                  <a
+                  <Link
                     href={l.href}
-                    onMouseEnter={() => setHovered(l.section)}
+                    onMouseEnter={() => setHovered(l.href)}
                     onMouseLeave={() => setHovered(null)}
                     className="relative inline-flex flex-col items-center px-3 py-2 text-sm transition-colors duration-150"
                     style={{ color: isDark ? "rgba(255,255,255,0.9)" : "#1a1a1a" }}
                   >
                     {l.label}
-                    {/* Subrayado rojo animado */}
+                    {/* Subrayado morado animado */}
                     <span
                       className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full transition-transform duration-200 origin-left"
                       style={{
-                        background: "#8B0000",
+                        background: "#7C3AED",
                         transform: showLine ? "scaleX(1)" : "scaleX(0)",
                       }}
                     />
-                  </a>
+                  </Link>
                 </li>
               );
             })}
@@ -121,14 +105,21 @@ export default function SiteHeader() {
         </nav>
 
         {/* Logo */}
-        <a href="#top" aria-label="Carnicería Fuente de Vida">
+        <Link href="/" aria-label="NEXZUS IT SERVICE" className="flex items-center gap-2.5">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={scrolled ? "/img/logo.svg" : "/img/logo-white.svg"}
-            alt="Fuente de Vida"
-            className="h-12 md:h-14 w-auto transition-all duration-300"
+            src="/img/isotipo-nexzus.png"
+            alt=""
+            aria-hidden="true"
+            className="h-9 md:h-10 w-auto"
           />
-        </a>
+          <span
+            className="font-heading text-xl font-bold tracking-wide transition-colors duration-300"
+            style={{ color: isDark ? "#fff" : "#0B0712" }}
+          >
+            NEXZUS <span style={{ color: isDark ? "#A78BFA" : "#7C3AED" }}>IT</span>
+          </span>
+        </Link>
 
         <div className="w-10 hidden md:block" />
       </div>
@@ -140,27 +131,27 @@ export default function SiteHeader() {
           className={[
             "md:hidden border-t flex flex-col transition-colors duration-300",
             isDark
-              ? "bg-negro/95 backdrop-blur border-white/10"
+              ? "bg-primary/95 backdrop-blur border-white/10"
               : "bg-white border-gray-200 shadow-lg",
           ].join(" ")}
         >
           {links.map((l) => {
-            const isActive = active === l.section;
+            const isActive = isActiveHref(l.href);
             return (
               <li key={l.href}>
-                <a
+                <Link
                   href={l.href}
                   onClick={() => setOpen(false)}
                   className={[
                     "block px-5 py-3 border-b text-sm transition-colors",
                     isDark
                       ? "text-white/90 border-white/10 hover:bg-white/10"
-                      : "text-negro border-gray-100 hover:bg-gray-50",
+                      : "text-primary border-gray-100 hover:bg-gray-50",
                   ].join(" ")}
-                  style={{ borderLeft: isActive ? "3px solid #8B0000" : "3px solid transparent" }}
+                  style={{ borderLeft: isActive ? "3px solid #7C3AED" : "3px solid transparent" }}
                 >
                   {l.label}
-                </a>
+                </Link>
               </li>
             );
           })}

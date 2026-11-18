@@ -16,7 +16,7 @@ export interface LoginResponse {
   user: User;
 }
 
-export type Category = "res" | "cerdo" | "pollo" | "embutidos" | "pescado";
+export type Category = "software" | "hardware" | "licencias" | "redes" | "accesorios";
 
 export interface Product {
   id: number;
@@ -48,7 +48,14 @@ export interface OrderItem {
   subtotal: number;
 }
 
+export type PaymentStatus = "pendiente" | "aprobado" | "rechazado" | "anulado" | "error";
+
 export interface Order {
+  reference?: string | null;
+  payment_status?: PaymentStatus | null;
+  payment_method?: string | null;
+  transaction_id?: string | null;
+  customer_document?: string | null;
   id: number;
   customer_name: string;
   customer_phone: string;

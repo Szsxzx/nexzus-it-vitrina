@@ -7,7 +7,7 @@ import {
 } from "@/components/AdminUI";
 import { api, type ApiError } from "@/lib/api";
 
-const DEFAULT_NUMBER = "573164013230";
+const DEFAULT_NUMBER = "573000000000";
 
 export default function WhatsAppPage() {
   const { user, logout } = useAdminAuth();
@@ -72,7 +72,7 @@ export default function WhatsAppPage() {
                 <Input
                   value={number}
                   onChange={(e) => { setNumber(e.target.value); setError(null); }}
-                  placeholder="573164013230"
+                  placeholder="573000000000"
                   required
                 />
               </Field>
@@ -82,7 +82,7 @@ export default function WhatsAppPage() {
                 <i className="fa-solid fa-circle-info mt-0.5 flex-shrink-0" />
                 <span>
                   Formato Colombia: <strong>57</strong> + número sin 0 inicial →{" "}
-                  <strong>573164013230</strong>
+                  <strong>573000000000</strong>
                 </span>
               </div>
 
@@ -113,7 +113,7 @@ export default function WhatsAppPage() {
                   <i className="fa-brands fa-whatsapp text-white text-xl" />
                 </div>
                 <div>
-                  <p className="font-semibold text-sm text-gray-900">Carnicería Fuente de Vida</p>
+                  <p className="font-semibold text-sm text-gray-900">NEXZUS IT SERVICE</p>
                   <p className="text-xs text-gray-400">{displayNumber}</p>
                 </div>
               </div>

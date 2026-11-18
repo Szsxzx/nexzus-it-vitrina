@@ -21,19 +21,15 @@ interface CatalogCategory {
 }
 
 const GRADIENT_OPTIONS = [
-  { value: "from-rojo to-rojo-mid",        label: "Rojo" },
-  { value: "from-pink-700 to-pink-900",     label: "Rosa / Cerdo" },
-  { value: "from-amber-600 to-amber-800",   label: "Ámbar / Pollo" },
-  { value: "from-orange-700 to-red-900",    label: "Naranja / Embutidos" },
-  { value: "from-azul to-azul-dark",        label: "Azul / Pescado" },
-  { value: "from-green-700 to-green-900",   label: "Verde" },
-  { value: "from-purple-700 to-purple-900", label: "Morado" },
-  { value: "from-negro to-negro2",          label: "Negro" },
+  { value: "from-primary to-secondary", label: "Negro a morado oscuro" },
+  { value: "from-accent to-primary",    label: "Morado a negro" },
+  { value: "from-secondary to-primary", label: "Morado oscuro a negro" },
+  { value: "from-accent to-accent-hover", label: "Morado" },
 ];
 
 type EditingCategory = Partial<CatalogCategory> & { slug: string; label: string; css_class: string };
 
-const emptyCategory = (): EditingCategory => ({ slug: "", label: "", css_class: "from-rojo to-rojo-mid" });
+const emptyCategory = (): EditingCategory => ({ slug: "", label: "", css_class: "from-accent to-accent-hover" });
 
 export default function CatalogPage() {
   const { user, logout } = useAdminAuth();
@@ -170,7 +166,7 @@ export default function CatalogPage() {
                 <Input
                   value={editing?.slug ?? ""}
                   onChange={(e) => setEditing({ ...editing!, slug: e.target.value.toLowerCase().replace(/\s/g, "-") })}
-                  placeholder="res, cerdo, pollo..."
+                  placeholder="software, hardware, redes..."
                   disabled={!isNew}
                   required
                 />
@@ -179,13 +175,13 @@ export default function CatalogPage() {
                 <Input
                   value={editing?.label ?? ""}
                   onChange={(e) => setEditing({ ...editing!, label: e.target.value })}
-                  placeholder="Cortes de Res"
+                  placeholder="Hardware"
                   required
                 />
               </Field>
               <Field label="Color / Gradiente">
                 <Select
-                  value={editing?.css_class ?? "from-rojo to-rojo-mid"}
+                  value={editing?.css_class ?? "from-accent to-accent-hover"}
                   onChange={(e) => setEditing({ ...editing!, css_class: e.target.value })}
                 >
                   {GRADIENT_OPTIONS.map((g) => <option key={g.value} value={g.value}>{g.label}</option>)}

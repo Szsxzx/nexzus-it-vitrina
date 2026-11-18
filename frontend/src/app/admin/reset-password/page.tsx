@@ -28,23 +28,22 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex bg-negro text-white">
-      <aside className="hidden md:flex w-1/2 items-center justify-center bg-gradient-to-br from-negro to-negro2">
+    <div className="min-h-screen flex bg-primary text-white">
+      <aside className="hidden md:flex w-1/2 items-center justify-center bg-gradient-to-br from-primary to-secondary">
         <div className="text-center">
-          <div className="w-32 h-32 rounded-2xl bg-rojo flex items-center justify-center text-5xl mx-auto shadow-2xl shadow-rojo/40">
-            🔐
-          </div>
-          <h1 className="mt-6 text-4xl font-serif italic">INCODOL</h1>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/img/logo-nexzus.png" alt="NEXZUS IT SERVICE" className="w-32 h-32 rounded-2xl mx-auto shadow-2xl shadow-accent/40" />
+          <h1 className="mt-6 text-4xl font-heading font-bold">NEXZUS IT SERVICE</h1>
         </div>
       </aside>
 
-      <main className="flex-1 flex flex-col justify-center p-8 md:p-16 bg-crema text-negro">
+      <main className="flex-1 flex flex-col justify-center p-8 md:p-16 bg-background text-primary">
         <div className="max-w-md mx-auto w-full">
           {!done ? (
             <>
-              <h1 className="text-3xl font-serif font-bold mb-3">Restablecer contraseña</h1>
+              <h1 className="text-3xl font-heading font-bold mb-3">Restablecer contraseña</h1>
               <p className="text-sm text-gray-600 mb-6">
-                Introduce el correo con el que inicias sesión en INCODOL para recibir las
+                Introduce el correo con el que inicias sesión en NEXZUS IT SERVICE para recibir las
                 instrucciones.
               </p>
 
@@ -55,12 +54,12 @@ export default function ResetPasswordPage() {
                   onChange={(e) => setCorreo(e.target.value)}
                   placeholder="tu@correo.com"
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-rojo outline-none"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-accent outline-none"
                 />
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 rounded-lg bg-rojo hover:bg-rojo-mid disabled:opacity-60 text-white font-semibold transition"
+                  className="w-full py-3 rounded-lg bg-accent hover:bg-accent-hover disabled:opacity-60 text-white font-semibold transition"
                 >
                   {loading ? "Enviando..." : "Enviar"}
                 </button>
@@ -68,7 +67,7 @@ export default function ResetPasswordPage() {
 
               <Link
                 href="/admin/login"
-                className="inline-flex items-center gap-2 mt-5 text-sm text-azul hover:underline"
+                className="inline-flex items-center gap-2 mt-5 text-sm text-accent hover:underline"
               >
                 ← Volver al inicio de sesión
               </Link>
@@ -90,7 +89,7 @@ export default function ResetPasswordPage() {
               </p>
               <Link
                 href="/admin/login"
-                className="inline-block mt-6 px-5 py-2 rounded-lg bg-rojo text-white hover:bg-rojo-mid transition"
+                className="inline-block mt-6 px-5 py-2 rounded-lg bg-accent text-white hover:bg-accent-hover transition"
               >
                 Volver al inicio de sesión
               </Link>

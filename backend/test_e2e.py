@@ -1,5 +1,5 @@
 """
-Test end-to-end del backend INCODOL.
+Test end-to-end del backend NEXZUS IT SERVICE.
 
 Cubre:
 - /health
@@ -40,7 +40,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from fastapi.testclient import TestClient   # noqa: E402
 from app.core.database import Base, engine  # noqa: E402
-from app.models import user, product, content  # noqa: E402,F401  (registra las tablas en Base.metadata)
+from app.models import user, product, content, pqr  # noqa: E402,F401  (registra las tablas en Base.metadata)
 from app.main import app                    # noqa: E402
 
 # En produccion el esquema lo crea Alembic (ver docker-compose.yml); aqui, sobre
@@ -62,7 +62,7 @@ def check(name, cond, detail=""):
 
 
 def main() -> int:
-    print("\n=== INCODOL Backend - Tests E2E ===\n")
+    print("\n=== NEXZUS Backend - Tests E2E ===\n")
     with TestClient(app) as c:
         # ---------- Health ----------
         print("[1] Health")
@@ -99,16 +99,16 @@ def main() -> int:
         r = c.get("/products")
         check("GET /products publico", r.status_code == 200 and len(r.json()) >= 8)
 
-        r = c.get("/products?category=res")
-        check("Filtrar por category=res", r.status_code == 200 and all(p["category"] == "res" for p in r.json()))
+        r = c.get("/products?category=hardware")
+        check("Filtrar por category=hardware", r.status_code == 200 and len(r.json()) >= 1 and all(p["category"] == "hardware" for p in r.json()))
 
-        r = c.get("/products?q=lomo")
-        check("Buscar q=lomo", r.status_code == 200 and any("Lomo" in p["name"] for p in r.json()))
+        r = c.get("/products?q=router")
+        check("Buscar q=router", r.status_code == 200 and any("Router" in p["name"] for p in r.json()))
 
         # ---------- Productos: admin escribe ----------
         new_p = {
             "slug": "test-corte", "name": "Test Corte", "description": "demo",
-            "category": "res", "price": 10000.0, "stock": 5, "is_active": True
+            "category": "hardware", "price": 10000.0, "stock": 5, "is_active": True
         }
         r = c.post("/products", json=new_p, headers=H_ADMIN)
         check("POST /products admin 201", r.status_code == 201, r.text)

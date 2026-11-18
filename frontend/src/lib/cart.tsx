@@ -6,6 +6,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
 export interface CartItem {
+  productId?: number; // id en BD: el backend toma el precio real
   name: string;
   price: string;      // formateado para mostrar
   unitPrice: number;  // numérico para el backend
@@ -15,14 +16,14 @@ export interface CartItem {
 interface CartCtx {
   items: CartItem[];
   count: number;
-  add: (name: string, price: string, unitPrice: number) => void;
+  add: (name: string, price: string, unitPrice: number, productId?: number) => void;
   inc: (idx: number) => void;
   dec: (idx: number) => void;
   clear: () => void;
 }
 
 const Ctx = createContext<CartCtx | null>(null);
-const STORAGE = "fdv_cart_v1";
+const STORAGE = "nexzus_cart_v1";
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
@@ -41,7 +42,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const value: CartCtx = {
     items,
     count: items.reduce((s, i) => s + i.qty, 0),
-    add: (name, price, unitPrice) =>
+    add: (name, price, unitPrice, productId) =>
       setItems((prev) => {
         const i = prev.findIndex((p) => p.name === name);
         if (i >= 0) {
@@ -49,7 +50,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           copy[i] = { ...copy[i], qty: copy[i].qty + 1 };
           return copy;
         }
-        return [...prev, { name, price, unitPrice, qty: 1 }];
+        return [...prev, { name, price, unitPrice, qty: 1, ...(productId != null ? { productId } : {}) }];
       }),
     inc: (idx) => setItems((p) => p.map((it, i) => (i === idx ? { ...it, qty: it.qty + 1 } : it))),
     dec: (idx) =>

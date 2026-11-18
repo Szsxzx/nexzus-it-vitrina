@@ -58,14 +58,14 @@ function CutCard({ c, index }: { c: PremiumCut; index: number }) {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={c.img ?? "/img/placeholder.jpg"}
+          src={c.img ?? "/img/placeholder.svg"}
           alt={c.name}
           className="w-full h-full object-cover"
           style={{
             transform: imgHover ? "scale(1.07)" : "scale(1)",
             transition: "transform 0.5s ease",
           }}
-          onError={(e) => ((e.currentTarget.src = "/img/placeholder.jpg"))}
+          onError={(e) => ((e.currentTarget.src = "/img/placeholder.svg"))}
         />
         {c.badge && (
           <span
@@ -80,14 +80,14 @@ function CutCard({ c, index }: { c: PremiumCut; index: number }) {
       <div className="flex flex-col py-1">
         <h3
           className="text-lg font-semibold transition-colors duration-200"
-          style={{ color: imgHover ? "#8B0000" : "#111" }}
+          style={{ color: imgHover ? "#7C3AED" : "#111" }}
         >
           {c.name}
         </h3>
         <p className="text-sm text-gray-500 mt-1.5 flex-1 leading-relaxed">{c.text}</p>
 
         <div className="flex items-center justify-between mt-4">
-          <span className="font-bold text-rojo text-lg">{c.price}</span>
+          <span className="font-bold text-accent text-lg">{c.price}</span>
           <span className="text-xs text-gray-400 italic">{c.origin}</span>
         </div>
 
@@ -95,15 +95,15 @@ function CutCard({ c, index }: { c: PremiumCut; index: number }) {
           onClick={handleAdd}
           className="mt-3 py-2.5 rounded-xl text-white text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2"
           style={{
-            background: btnAdded ? "#059669" : "#3AA8C1",
+            background: btnAdded ? "#059669" : "#0B0712",
             transform: btnAdded ? "scale(0.98)" : "scale(1)",
-            boxShadow: btnAdded ? "0 4px 14px rgba(5,150,105,0.35)" : "0 4px 14px rgba(58,168,193,0.3)",
+            boxShadow: btnAdded ? "0 4px 14px rgba(5,150,105,0.35)" : "0 4px 14px rgba(124,58,237,0.3)",
           }}
           onMouseEnter={(e) => {
-            if (!btnAdded) (e.currentTarget as HTMLElement).style.background = "#2e8fa8";
+            if (!btnAdded) (e.currentTarget as HTMLElement).style.background = "#1A1030";
           }}
           onMouseLeave={(e) => {
-            if (!btnAdded) (e.currentTarget as HTMLElement).style.background = "#3AA8C1";
+            if (!btnAdded) (e.currentTarget as HTMLElement).style.background = "#0B0712";
           }}
         >
           {btnAdded ? (
@@ -140,7 +140,7 @@ function SectionBlock({ s, cuts, sectionIndex }: { s: PremiumSection; cuts: Prem
         <h2 className="text-xl font-semibold tracking-wide">{s.title}</h2>
       </header>
 
-      {/* Grid de cortes */}
+      {/* Grid de soluciones */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-b-2xl border border-t-0 border-gray-100"
         style={{ boxShadow: "0 4px 24px rgba(0,0,0,0.05)" }}
       >
@@ -176,14 +176,14 @@ export default function PremiumCuts() {
         }}
       >
         <div className="flex items-center justify-center gap-3 mb-3">
-          <div className="h-px w-10 bg-rojo opacity-40" />
-          <span className="text-xs font-semibold uppercase tracking-widest text-azul">Selección especial</span>
-          <div className="h-px w-10 bg-rojo opacity-40" />
+          <div className="h-px w-10 bg-accent opacity-40" />
+          <span className="text-xs font-semibold uppercase tracking-widest text-secondary">Selección especial</span>
+          <div className="h-px w-10 bg-accent opacity-40" />
         </div>
-        <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900">
-          Nuestros Cortes Premium
+        <h2 className="text-3xl md:text-4xl font-heading font-bold text-gray-900">
+          Soluciones Destacadas
         </h2>
-        <div className="mt-3 mx-auto w-12 h-0.5 rounded-full bg-rojo opacity-60" />
+        <div className="mt-3 mx-auto w-12 h-0.5 rounded-full bg-accent opacity-60" />
       </div>
 
       {/* Secciones */}

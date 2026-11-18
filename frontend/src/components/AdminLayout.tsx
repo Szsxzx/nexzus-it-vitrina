@@ -11,6 +11,7 @@ const navGroups = [
       { href: "/admin/dashboard", label: "Dashboard",   icon: "fa-chart-line" },
       { href: "/admin/products",  label: "Productos",   icon: "fa-box" },
       { href: "/admin/orders",    label: "Pedidos",     icon: "fa-clipboard-list" },
+      { href: "/admin/pqr",       label: "PQR",         icon: "fa-headset" },
       { href: "/admin/users",     label: "Usuarios",    icon: "fa-users", adminOnly: true },
     ],
   },
@@ -19,9 +20,9 @@ const navGroups = [
     items: [
       { href: "/admin/banner",        label: "Banner",           icon: "fa-image" },
       { href: "/admin/catalog",       label: "Catálogo",         icon: "fa-tags" },
-      { href: "/admin/promotions",    label: "Promociones",      icon: "fa-percent" },
-      { href: "/admin/premium-cuts",  label: "Cortes Premium",   icon: "fa-cow" },
-      { href: "/admin/recipes",       label: "Recetas",          icon: "fa-book-open" },
+      { href: "/admin/promotions",    label: "Ofertas",           icon: "fa-percent" },
+      { href: "/admin/premium-cuts",  label: "Soluciones destacadas",   icon: "fa-star" },
+      { href: "/admin/recipes",       label: "Blog",          icon: "fa-book-open" },
       { href: "/admin/footer",        label: "Pie de página",    icon: "fa-grip-lines" },
     ],
   },
@@ -56,10 +57,10 @@ function NavItem({
       className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium relative overflow-hidden"
       style={{
         background: active
-          ? "rgba(139,0,0,0.85)"
+          ? "rgba(124,58,237,0.85)"
           : hovered ? "rgba(255,255,255,0.06)" : "transparent",
         color: active ? "#fff" : hovered ? "#ccc" : "#666",
-        boxShadow: active ? "0 2px 10px rgba(139,0,0,0.3)" : "none",
+        boxShadow: active ? "0 2px 10px rgba(124,58,237,0.3)" : "none",
         transition: "background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease",
       }}
       onMouseEnter={() => setHovered(true)}
@@ -68,7 +69,7 @@ function NavItem({
       {active && (
         <span
           className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-r"
-          style={{ background: "#ff8080" }}
+          style={{ background: "#A78BFA" }}
         />
       )}
       <i
@@ -112,7 +113,7 @@ function LogoutBtn({ onLogout }: { onLogout: () => void }) {
       className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs"
       style={{
         color: hovered ? "#ff5555" : "#555",
-        background: hovered ? "rgba(139,0,0,0.12)" : "transparent",
+        background: hovered ? "rgba(124,58,237,0.12)" : "transparent",
         transition: "all 0.15s ease",
       }}
       onMouseEnter={() => setHovered(true)}
@@ -137,21 +138,25 @@ export default function AdminLayout({
   const displayName = user.full_name ?? user.username;
 
   return (
-    <div className="min-h-screen flex" style={{ background: "#f4f3f0" }}>
+    <div className="min-h-screen flex" style={{ background: "#F8F7FB" }}>
 
       {/* ── Sidebar ─────────────────────────────────────────────────────── */}
       <aside
         className="w-60 flex flex-col fixed inset-y-0 left-0 overflow-y-auto"
-        style={{ background: "#111111", borderRight: "1px solid rgba(255,255,255,0.04)" }}
+        style={{ background: "#0B0712", borderRight: "1px solid rgba(255,255,255,0.04)" }}
       >
         {/* Logo */}
         <div className="px-5 pt-6 pb-4 flex flex-col items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/img/logo-white.svg"
-            alt="Fuente de Vida"
-            className="w-full max-w-[160px] h-auto"
+            src="/img/isotipo-nexzus.png"
+            alt=""
+            aria-hidden="true"
+            className="h-12 w-auto"
           />
+          <span className="mt-2 font-heading text-lg font-bold tracking-wide text-white">
+            NEXZUS <span className="text-accent-light">IT</span>
+          </span>
           <div className="mt-2 flex items-center gap-1.5">
             <span
               className="text-[9px] tracking-[0.22em] uppercase font-medium"
@@ -210,7 +215,7 @@ export default function AdminLayout({
             <div className="relative flex-shrink-0">
               <div
                 className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white"
-                style={{ background: "#8B0000" }}
+                style={{ background: "#7C3AED" }}
               >
                 {getInitials(displayName)}
               </div>

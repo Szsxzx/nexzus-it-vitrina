@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import List, Optional
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.models.product import Category, OrderStatus
+from app.models.product import DEFAULT_CATEGORY, OrderStatus
 
 
 # ---------- Product ----------
@@ -11,7 +11,7 @@ class ProductBase(BaseModel):
     slug: str = Field(min_length=2, max_length=100)
     name: str = Field(min_length=2, max_length=150)
     description: str = ""
-    category: Category = Category.res
+    category: str = Field(default=DEFAULT_CATEGORY, min_length=1, max_length=50)
     price: float = Field(ge=0)
     old_price: Optional[float] = Field(default=None, ge=0)
     image_url: Optional[str] = None
@@ -27,7 +27,7 @@ class ProductCreate(ProductBase): ...
 class ProductUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
-    category: Optional[Category] = None
+    category: Optional[str] = Field(default=None, min_length=1, max_length=50)
     price: Optional[float] = Field(default=None, ge=0)
     old_price: Optional[float] = Field(default=None, ge=0)
     image_url: Optional[str] = None
@@ -84,6 +84,11 @@ class OrderOut(BaseModel):
     status: OrderStatus
     total: float
     channel: str
+    customer_document: Optional[str] = None
+    reference: Optional[str] = None
+    payment_status: Optional[str] = None
+    payment_method: Optional[str] = None
+    transaction_id: Optional[str] = None
     created_at: datetime
     updated_at: datetime
     items: List[OrderItemOut]

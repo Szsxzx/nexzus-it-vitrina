@@ -12,19 +12,19 @@ import ImageUpload from "@/components/ImageUpload";
 import { api, type ApiError } from "@/lib/api";
 import type { Product, Category } from "@/lib/types";
 
-const CATEGORIES: Category[] = ["res", "cerdo", "pollo", "embutidos", "pescado"];
+const CATEGORIES: Category[] = ["software", "hardware", "licencias", "redes", "accesorios"];
 const fmtCOP = new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 });
 
 const catMeta: Record<string, { color: "gray"|"red"|"amber"|"blue"|"green"|"purple"; emoji: string }> = {
-  res:       { color: "red",    emoji: "🐄" },
-  cerdo:     { color: "amber",  emoji: "🐷" },
-  pollo:     { color: "blue",   emoji: "🍗" },
-  embutidos: { color: "purple", emoji: "🌭" },
-  pescado:   { color: "blue",   emoji: "🐟" },
+  software:   { color: "purple", emoji: "" },
+  hardware:   { color: "gray",   emoji: "" },
+  licencias:  { color: "blue",   emoji: "" },
+  redes:      { color: "green",  emoji: "" },
+  accesorios: { color: "amber",  emoji: "" },
 };
 
 const empty = (): Partial<Product> => ({
-  slug: "", name: "", description: "", category: "res",
+  slug: "", name: "", description: "", category: "hardware",
   price: 0, old_price: undefined, image_url: "",
   rating: 4.5, review_count: 0, discount: "", tags: "",
   stock: 0, is_active: true,
@@ -133,7 +133,7 @@ export default function ProductsPage() {
               onClick={() => setCatFilter(c)}
               className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
               style={{
-                background: catFilter === c ? "#8B0000" : "transparent",
+                background: catFilter === c ? "#7C3AED" : "transparent",
                 color: catFilter === c ? "#fff" : "#777",
               }}
             >
@@ -270,7 +270,7 @@ export default function ProductsPage() {
               </Field>
               <Field label="Categoría">
                 <Select
-                  value={editing?.category ?? "res"}
+                  value={editing?.category ?? "hardware"}
                   onChange={(e) => setEditing({ ...editing!, category: e.target.value as Category })}
                 >
                   {CATEGORIES.map((c) => <option key={c} value={c}>{catMeta[c]?.emoji ?? ""} {c}</option>)}
@@ -280,7 +280,7 @@ export default function ProductsPage() {
                 <Input
                   value={(editing as any)?.tags ?? ""}
                   onChange={(e) => setEditing({ ...editing!, tags: e.target.value } as any)}
-                  placeholder="TOP VENTAS, PREMIUM"
+                  placeholder="GARANTÍA 1 AÑO, NUEVO"
                 />
               </Field>
               <Field label="Descripción" full>

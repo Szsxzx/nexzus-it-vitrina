@@ -9,9 +9,9 @@ const PUBLIC_PATHS = ["/admin/login", "/admin/reset-password"];
 
 function LoadingScreen() {
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: "#f4f3f0" }}>
+    <div className="min-h-screen flex items-center justify-center" style={{ background: "#F8F7FB" }}>
       <div className="flex flex-col items-center gap-3">
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style={{ background: "#8B0000" }}>
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style={{ background: "#7C3AED" }}>
           🥩
         </div>
         <p className="text-sm text-gray-400 font-medium">Cargando...</p>

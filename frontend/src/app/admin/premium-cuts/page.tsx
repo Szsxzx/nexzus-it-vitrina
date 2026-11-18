@@ -34,45 +34,37 @@ interface PremiumCut {
 }
 
 const ICON_OPTIONS = [
-  { value: "fa-cow",            label: "🐄 Res" },
-  { value: "fa-piggy-bank",     label: "🐷 Cerdo" },
-  { value: "fa-drumstick-bite", label: "🍗 Pollo" },
-  { value: "fa-fish",           label: "🐟 Pescado" },
-  { value: "fa-sausage",        label: "🌭 Embutidos" },
-  { value: "fa-star",           label: "⭐ Estrella" },
-  { value: "fa-fire",           label: "🔥 Fuego" },
+  { value: "fa-laptop",         label: "PortÃ¡til" },
+  { value: "fa-server",         label: "Servidor" },
+  { value: "fa-network-wired",  label: "Redes" },
+  { value: "fa-key",            label: "Licencias" },
+  { value: "fa-shield-halved",  label: "Seguridad" },
+  { value: "fa-screwdriver-wrench", label: "Soporte" },
+  { value: "fa-star",           label: "Destacado" },
 ];
 
 const COLOR_OPTIONS = [
-  { value: "bg-rojo",      label: "🔴 Rojo" },
-  { value: "bg-negro2",    label: "⚫ Negro" },
-  { value: "bg-azul",      label: "🔵 Azul" },
-  { value: "bg-green-700", label: "🟢 Verde" },
-  { value: "bg-amber-600", label: "🟡 Ámbar" },
-  { value: "bg-pink-700",  label: "🩷 Rosa" },
+  { value: "bg-primary",   label: "Negro de marca" },
+  { value: "bg-secondary", label: "Morado oscuro" },
+  { value: "bg-accent",    label: "Morado" },
+  { value: "bg-success",   label: "Verde" },
+  { value: "bg-warning",   label: "Ãmbar" },
 ];
 
-const BADGE_COLOR_OPTIONS = [
-  { value: "bg-rojo",      label: "🔴 Rojo" },
-  { value: "bg-azul",      label: "🔵 Azul" },
-  { value: "bg-negro2",    label: "⚫ Negro" },
-  { value: "bg-green-700", label: "🟢 Verde" },
-  { value: "bg-amber-600", label: "🟡 Ámbar" },
-];
+const BADGE_COLOR_OPTIONS = COLOR_OPTIONS;
 
 const colorHex: Record<string, string> = {
-  "bg-rojo": "#8B0000", "bg-negro2": "#1a1a1a",
-  "bg-azul": "#3AA8C1", "bg-green-700": "#15803d",
-  "bg-amber-600": "#d97706", "bg-pink-700": "#be185d",
+  "bg-primary": "#0B0712", "bg-secondary": "#1A1030", "bg-accent": "#7C3AED",
+  "bg-success": "#15803D", "bg-warning": "#B45309",
 };
 
 type EditingSection = Partial<PremiumSection> & { title: string; icon: string; color: string };
 type EditingCut = Partial<PremiumCut> & { name: string; price: string; badge_color: string };
 
-const emptySection = (): EditingSection => ({ title: "", icon: "fa-cow", color: "bg-rojo" });
+const emptySection = (): EditingSection => ({ title: "", icon: "fa-laptop", color: "bg-accent" });
 const emptyCut = (sections: PremiumSection[]): EditingCut => ({
   section_id: sections[0]?.id ?? null,
-  name: "", price: "", unit_price: 0, origin: "", img: "", badge: "", badge_color: "bg-rojo", text: "",
+  name: "", price: "", unit_price: 0, origin: "", img: "", badge: "", badge_color: "bg-accent", text: "",
 });
 
 export default function PremiumCutsPage() {
@@ -109,7 +101,7 @@ export default function PremiumCutsPage() {
     } catch (e) { setErr((e as ApiError).detail); }
   }
   async function removeSection(id: number) {
-    if (!confirm("¿Eliminar esta sección? Los cortes asociados quedarán sin sección.")) return;
+    if (!confirm("¿Eliminar esta sección? Las soluciones asociadas quedarán sin sección.")) return;
     try { await api.delete(`/premium-sections/${id}`); reload(); }
     catch (e) { setErr((e as ApiError).detail); }
   }
@@ -140,7 +132,7 @@ export default function PremiumCutsPage() {
     } catch (e) { setErr((e as ApiError).detail); }
   }
   async function removeCut(id: number) {
-    if (!confirm("¿Eliminar este corte?")) return;
+    if (!confirm("¿Eliminar esta solución?")) return;
     try { await api.delete(`/premium-cuts/${id}`); reload(); }
     catch (e) { setErr((e as ApiError).detail); }
   }
@@ -159,8 +151,8 @@ export default function PremiumCutsPage() {
   return (
       <PageShell>
         <PageHeader
-          title="Cortes Premium"
-          subtitle="Secciones y cortes de la vitrina"
+          title="Soluciones destacadas"
+          subtitle="Secciones y soluciones de la tienda"
           actions={<SavedToast visible={saved} />}
         />
 
@@ -190,7 +182,7 @@ export default function PremiumCutsPage() {
                     <div className="flex items-center gap-2">
                       <span
                         className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs flex-shrink-0"
-                        style={{ background: colorHex[s.color] ?? "#8B0000" }}
+                        style={{ background: colorHex[s.color] ?? "#7C3AED" }}
                       >
                         <i className={`fa-solid ${s.icon}`} />
                       </span>
@@ -201,7 +193,7 @@ export default function PremiumCutsPage() {
                   <Td>
                     <span
                       className="inline-block w-5 h-5 rounded-lg border border-black/10"
-                      style={{ background: colorHex[s.color] ?? "#8B0000" }}
+                      style={{ background: colorHex[s.color] ?? "#7C3AED" }}
                     />
                   </Td>
                   <Td>
@@ -226,9 +218,9 @@ export default function PremiumCutsPage() {
         {/* ── CORTES ── */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Cortes</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Soluciones</h2>
             <BtnPrimary onClick={() => { setEditingCut(emptyCut(sections)); setIsNewCut(true); }}>
-              <i className="fa-solid fa-plus text-xs" /> Nuevo corte
+              <i className="fa-solid fa-plus text-xs" /> Nueva solución
             </BtnPrimary>
           </div>
           <Table>
@@ -251,7 +243,7 @@ export default function PremiumCutsPage() {
                       {sec ? (
                         <span
                           className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium text-white"
-                          style={{ background: colorHex[sec.color] ?? "#8B0000" }}
+                          style={{ background: colorHex[sec.color] ?? "#7C3AED" }}
                         >
                           <i className={`fa-solid ${sec.icon} text-[10px]`} />
                           {sec.title}
@@ -264,7 +256,7 @@ export default function PremiumCutsPage() {
                     <Td>
                       <span
                         className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold text-white"
-                        style={{ background: colorHex[c.badge_color] ?? "#8B0000" }}
+                        style={{ background: colorHex[c.badge_color] ?? "#7C3AED" }}
                       >
                         {c.badge}
                       </span>
@@ -283,7 +275,7 @@ export default function PremiumCutsPage() {
                 );
               })}
               {cuts.length === 0 && (
-                <tr><td colSpan={6}><EmptyState message="Sin cortes" /></td></tr>
+                <tr><td colSpan={6}><EmptyState message="Sin soluciones" /></td></tr>
               )}
             </Tbody>
           </Table>
@@ -316,7 +308,7 @@ export default function PremiumCutsPage() {
                 </Field>
                 <Field label="Color de encabezado">
                   <Select
-                    value={editingSection?.color ?? "bg-rojo"}
+                    value={editingSection?.color ?? "bg-accent"}
                     onChange={(e) => setEditingSection({ ...editingSection!, color: e.target.value })}
                   >
                     {COLOR_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -335,7 +327,7 @@ export default function PremiumCutsPage() {
         <Modal
           open={!!editingCut}
           onClose={() => setEditingCut(null)}
-          title={isNewCut ? "Nuevo corte" : "Editar corte"}
+          title={isNewCut ? "Nueva solución" : "Editar solución"}
         >
           <form onSubmit={saveCut}>
             <ModalBody>
@@ -347,7 +339,7 @@ export default function PremiumCutsPage() {
                   {sections.map((s) => <option key={s.id} value={s.id}>{s.title}</option>)}
                 </Select>
               </Field>
-              <Field label="Nombre del corte" required>
+              <Field label="Nombre de la solución" required>
                 <Input
                   value={editingCut?.name ?? ""}
                   onChange={(e) => setEditingCut({ ...editingCut!, name: e.target.value })}
@@ -373,7 +365,7 @@ export default function PremiumCutsPage() {
                 </Field>
                 <Field label="Color del badge">
                   <Select
-                    value={editingCut?.badge_color ?? "bg-rojo"}
+                    value={editingCut?.badge_color ?? "bg-accent"}
                     onChange={(e) => setEditingCut({ ...editingCut!, badge_color: e.target.value })}
                   >
                     {BADGE_COLOR_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -391,7 +383,7 @@ export default function PremiumCutsPage() {
                 <Input
                   value={editingCut?.text ?? ""}
                   onChange={(e) => setEditingCut({ ...editingCut!, text: e.target.value })}
-                  placeholder="Descripción del corte..."
+                  placeholder="Descripción de la solución..."
                 />
               </Field>
               <Field label="Imagen">

@@ -62,7 +62,7 @@ export default function UsersPage() {
                   <div className="flex items-center gap-3">
                     <div
                       className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
-                      style={{ background: "#8B0000" }}
+                      style={{ background: "#7C3AED" }}
                     >
                       {(u.full_name ?? u.username).split(" ").map((w: string) => w[0]).slice(0, 2).join("").toUpperCase()}
                     </div>

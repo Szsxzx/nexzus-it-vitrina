@@ -7,7 +7,7 @@ import {
   Modal, ModalBody,
 } from "@/components/AdminUI";
 import { api, type ApiError } from "@/lib/api";
-import type { Order, OrderStatus } from "@/lib/types";
+import type { Order, OrderStatus, PaymentStatus } from "@/lib/types";
 
 const STATUSES: OrderStatus[] = ["pendiente", "confirmado", "en_camino", "entregado", "cancelado"];
 const fmtCOP = new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 });
@@ -24,6 +24,14 @@ const statusMeta: Record<OrderStatus, {
 };
 
 const STATUS_ORDER: OrderStatus[] = ["pendiente", "confirmado", "en_camino", "entregado"];
+
+const payMeta: Record<PaymentStatus, { color: "amber"|"green"|"red"|"gray"; label: string }> = {
+  pendiente: { color: "amber", label: "Pago pendiente" },
+  aprobado:  { color: "green", label: "Pago aprobado" },
+  rechazado: { color: "red",   label: "Pago rechazado" },
+  anulado:   { color: "gray",  label: "Pago anulado" },
+  error:     { color: "red",   label: "Error de pago" },
+};
 
 export default function OrdersPage() {
   const { user } = useAdminAuth();
@@ -108,8 +116,8 @@ export default function OrdersPage() {
       {/* Tabla */}
       <Table>
         <Thead>
-          <Th>#</Th><Th>Cliente</Th><Th>Teléfono</Th>
-          <Th right>Total</Th><Th>Estado</Th><Th>Fecha</Th><Th />
+          <Th>#</Th><Th>Referencia</Th><Th>Cliente</Th><Th>Teléfono</Th>
+          <Th right>Total</Th><Th>Estado</Th><Th>Pago</Th><Th>Fecha</Th><Th />
         </Thead>
         <Tbody>
           {orders.map((o) => {
@@ -119,6 +127,7 @@ export default function OrdersPage() {
                 <Td muted>
                   <span className="font-mono text-xs bg-gray-50 px-2 py-0.5 rounded-lg border border-gray-100">#{o.id}</span>
                 </Td>
+                <Td muted><span className="font-mono text-xs">{o.reference ?? "—"}</span></Td>
                 <Td>
                   <div className="flex items-center gap-2.5">
                     <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
@@ -131,6 +140,7 @@ export default function OrdersPage() {
                 <Td muted>{o.customer_phone}</Td>
                 <Td right><span className="font-semibold text-gray-900">{fmtCOP.format(o.total)}</span></Td>
                 <Td><Badge color={meta.color} dot>{meta.label}</Badge></Td>
+                <Td>{o.payment_status ? <Badge color={payMeta[o.payment_status].color} dot>{payMeta[o.payment_status].label}</Badge> : <span className="text-xs text-gray-400">—</span>}</Td>
                 <Td muted>
                   <span className="text-xs">
                     {new Date(o.created_at).toLocaleDateString("es-CO", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
@@ -145,7 +155,7 @@ export default function OrdersPage() {
               </Tr>
             );
           })}
-          {orders.length === 0 && <tr><td colSpan={7}><EmptyState message="Sin pedidos" /></td></tr>}
+          {orders.length === 0 && <tr><td colSpan={9}><EmptyState message="Sin pedidos" /></td></tr>}
         </Tbody>
       </Table>
 
@@ -210,6 +220,11 @@ export default function OrdersPage() {
               <div className="grid grid-cols-2 gap-x-4 gap-y-3 px-4 py-3 text-sm">
                 {([
                   open.customer_email && ["Email", open.customer_email],
+                  open.customer_document && ["Documento", open.customer_document],
+                  open.reference && ["Referencia", open.reference],
+                  open.payment_status && ["Estado de pago", payMeta[open.payment_status].label],
+                  open.payment_method && ["Método de pago", open.payment_method],
+                  open.transaction_id && ["ID transacción", open.transaction_id],
                   open.address        && ["Dirección", open.address],
                   ["Canal", open.channel],
                   open.notes          && ["Notas", open.notes],

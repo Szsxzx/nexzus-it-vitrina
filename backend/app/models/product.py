@@ -9,12 +9,9 @@ from sqlalchemy.orm import relationship
 from app.core.database import Base
 
 
-class Category(str, enum.Enum):
-    res       = "res"
-    cerdo     = "cerdo"
-    pollo     = "pollo"
-    embutidos = "embutidos"
-    pescado   = "pescado"
+# `category` era un Enum fijo (res/cerdo/...). Ahora es un slug libre que debe
+# corresponder a una fila de catalog_categories (software, hardware, ...).
+DEFAULT_CATEGORY = "hardware"
 
 
 class Product(Base):
@@ -24,7 +21,7 @@ class Product(Base):
     slug        = Column(String(100), unique=True, nullable=False, index=True)
     name        = Column(String(150), nullable=False)
     description = Column(Text, nullable=False, default="")
-    category    = Column(Enum(Category), nullable=False, default=Category.res)
+    category    = Column(String(50), nullable=False, default=DEFAULT_CATEGORY)
 
     price       = Column(Float, nullable=False, default=0.0)
     old_price   = Column(Float, nullable=True)
@@ -67,7 +64,14 @@ class Order(Base):
 
     status        = Column(Enum(OrderStatus), default=OrderStatus.pendiente, nullable=False)
     total         = Column(Float, default=0.0, nullable=False)
-    channel       = Column(String(30), default="web", nullable=False)  # web/whatsapp/local
+    channel       = Column(String(30), default="web", nullable=False)  # web/whatsapp/local/wompi
+    customer_document = Column(String(30), nullable=True)
+
+    # Pago en linea (Wompi). Quedan nulos en pedidos creados por /orders (WhatsApp).
+    reference      = Column(String(40), unique=True, nullable=True, index=True)
+    payment_status = Column(String(20), nullable=True)  # pendiente/aprobado/rechazado/anulado/error
+    payment_method = Column(String(50), nullable=True)  # CARD, PSE, NEQUI, BANCOLOMBIA_TRANSFER...
+    transaction_id = Column(String(80), nullable=True)
 
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at = Column(

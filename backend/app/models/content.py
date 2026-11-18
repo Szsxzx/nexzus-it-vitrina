@@ -55,7 +55,7 @@ class Promotion(Base):
     old_price  = Column(String(30), nullable=True)
     unit_price = Column(Float, nullable=False, default=0.0)
     off        = Column(String(30), nullable=False, default="")
-    color      = Column(String(30), nullable=False, default="bg-rojo")
+    color      = Column(String(30), nullable=False, default="bg-primary")
     img        = Column(String(500), nullable=True)
     sort_order = Column(Integer, nullable=False, default=0)
 
@@ -94,7 +94,7 @@ class CatalogCategory(Base):
     id         = Column(Integer, primary_key=True, index=True)
     slug       = Column(String(50), unique=True, nullable=False, index=True)
     label      = Column(String(100), nullable=False)
-    css_class  = Column(String(100), nullable=False, default="from-rojo to-rojo-mid")
+    css_class  = Column(String(100), nullable=False, default="from-primary to-secondary")
     image      = Column(String(500), nullable=True)
     sort_order = Column(Integer, nullable=False, default=0)
 
@@ -112,8 +112,8 @@ class PremiumSection(Base):
 
     id         = Column(Integer, primary_key=True, index=True)
     title      = Column(String(100), nullable=False)
-    icon       = Column(String(50), nullable=False, default="fa-cow")
-    color      = Column(String(30), nullable=False, default="bg-rojo")
+    icon       = Column(String(50), nullable=False, default="fa-laptop-code")
+    color      = Column(String(30), nullable=False, default="bg-primary")
     sort_order = Column(Integer, nullable=False, default=0)
 
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
@@ -138,7 +138,7 @@ class PremiumCut(Base):
     origin      = Column(String(150), nullable=True)
     img         = Column(String(500), nullable=True)
     badge       = Column(String(50), nullable=True)
-    badge_color = Column(String(30), nullable=False, default="bg-rojo")
+    badge_color = Column(String(30), nullable=False, default="bg-primary")
     text        = Column(String(400), nullable=True)
     sort_order  = Column(Integer, nullable=False, default=0)
 

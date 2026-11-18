@@ -1,5 +1,5 @@
 # =========================================================================
-#  Vitrina — Carnicería Fuente de Vida
+#  Vitrina — NEXZUS IT SERVICE
 #
 #  Levantar:    docker compose up --build
 #  Reset BD:    docker compose down -v && docker compose up --build
@@ -40,9 +40,17 @@ services:
       DATABASE_URL: postgresql+psycopg2://vitrina:vitrina@db:5432/vitrina
       JWT_SECRET: ${JWT_SECRET:-change-me-in-production-use-openssl-rand-hex-32}
       CORS_ORIGINS: http://127.0.0.1:3000,http://localhost:3000
-      FIRST_ADMIN_EMAIL: admin@fuentedevida.co
+      FIRST_ADMIN_EMAIL: admin@nexzusit.com
       FIRST_ADMIN_USERNAME: admin
       FIRST_ADMIN_PASSWORD: Admin123!
+      APP_NAME: NEXZUS IT SERVICE API
+      PUBLIC_SITE_URL: http://127.0.0.1:3000
+      # Wompi (sandbox). Pon las llaves de prueba en un .env junto a este archivo.
+      WOMPI_ENV: ${WOMPI_ENV:-sandbox}
+      WOMPI_PUBLIC_KEY: ${WOMPI_PUBLIC_KEY:-}
+      WOMPI_PRIVATE_KEY: ${WOMPI_PRIVATE_KEY:-}
+      WOMPI_INTEGRITY_SECRET: ${WOMPI_INTEGRITY_SECRET:-}
+      WOMPI_EVENTS_SECRET: ${WOMPI_EVENTS_SECRET:-}
       # Los bind mounts de Docker Desktop en Windows no propagan bien los
       # eventos nativos de filesystem: sin esto, --reload no detecta cambios
       # de forma confiable. Forzar polling lo arregla.

@@ -50,20 +50,20 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex" style={{ background: "#0f0f0f" }}>
+    <div className="min-h-screen flex" style={{ background: "#0B0712" }}>
       {/* Panel izquierdo */}
       <aside className="hidden lg:flex w-[600px] flex-col items-center justify-center flex-shrink-0 relative overflow-hidden">
         {/* Glow de fondo */}
         <div
           className="absolute inset-0 opacity-40"
-          style={{ background: "radial-gradient(ellipse at 40% 50%, #8B0000 0%, transparent 65%)" }}
+          style={{ background: "radial-gradient(ellipse at 40% 50%, #7C3AED 0%, transparent 65%)" }}
         />
         <div className="relative z-10 flex flex-col items-center text-center px-10">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/img/logo-white.svg"
-            alt="Fuente de Vida"
-            className="w-56 h-auto mb-8 drop-shadow-2xl"
+            src="/img/logo-nexzus.png"
+            alt="NEXZUS IT SERVICE"
+            className="w-40 h-40 rounded-3xl mb-8 shadow-2xl"
           />
           <div className="space-y-3 w-full">
             {[
@@ -76,7 +76,7 @@ export default function LoginPage() {
                 className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-left"
                 style={{ background: "rgba(255,255,255,0.04)", color: "#666" }}
               >
-                <i className={`fa-solid ${f.icon} w-4 text-center flex-shrink-0`} style={{ color: "#8B0000" }} />
+                <i className={`fa-solid ${f.icon} w-4 text-center flex-shrink-0`} style={{ color: "#7C3AED" }} />
                 {f.text}
               </div>
             ))}
@@ -95,10 +95,10 @@ export default function LoginPage() {
             {/* Logo mobile */}
             <div className="lg:hidden flex justify-center mb-8">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/img/logo.svg" alt="Fuente de Vida" className="h-14 w-auto" />
+              <img src="/img/logo-nexzus.png" alt="NEXZUS IT SERVICE" className="h-14 w-14 rounded-xl" />
             </div>
 
-            <h2 className="text-2xl font-serif font-bold text-gray-900 mb-1">Iniciar sesión</h2>
+            <h2 className="text-2xl font-heading font-bold text-gray-900 mb-1">Iniciar sesión</h2>
             <p className="text-sm text-gray-400 mb-8">Panel de administración</p>
 
             <form onSubmit={onSubmit} className="space-y-4">
@@ -134,9 +134,9 @@ export default function LoginPage() {
                 type="submit"
                 disabled={loading}
                 className="w-full py-3 rounded-xl text-sm font-semibold text-white transition-all disabled:opacity-60 mt-2"
-                style={{ background: "#8B0000" }}
-                onMouseEnter={(e) => { if (!loading) (e.currentTarget as HTMLElement).style.background = "#a50000"; }}
-                onMouseLeave={(e) => { if (!loading) (e.currentTarget as HTMLElement).style.background = "#8B0000"; }}
+                style={{ background: "#7C3AED" }}
+                onMouseEnter={(e) => { if (!loading) (e.currentTarget as HTMLElement).style.background = "#6D28D9"; }}
+                onMouseLeave={(e) => { if (!loading) (e.currentTarget as HTMLElement).style.background = "#7C3AED"; }}
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -185,7 +185,7 @@ export default function LoginPage() {
             <p className="text-sm text-gray-400 mt-1 mb-6">Redirigiendo...</p>
             <div
               className="w-6 h-6 border-2 border-t-transparent rounded-full animate-spin mx-auto"
-              style={{ borderColor: "#8B0000", borderTopColor: "transparent" }}
+              style={{ borderColor: "#7C3AED", borderTopColor: "transparent" }}
             />
           </div>
         )}

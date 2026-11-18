@@ -11,9 +11,9 @@ interface BannerData {
 }
 
 const defaultBanner: BannerData = {
-  subtitle: "La mejor carne de la ciudad",
-  title: "100% Natural",
-  highlight: "Carne Premium",
+  subtitle: "Tecnología para tu negocio",
+  title: "Software y Hardware",
+  highlight: "NEXZUS IT SERVICE",
   ctaText: "Ver catálogo",
   ctaHref: "#products",
 };
@@ -44,27 +44,17 @@ export default function Banner() {
     <section
       id="top"
       className="relative min-h-[90vh] flex flex-col items-center justify-center text-white text-center overflow-hidden"
-      style={{ background: "linear-gradient(135deg, #0f0f0f 0%, #2a0000 50%, #0f0f0f 100%)" }}
+      style={{ background: "linear-gradient(135deg, #0B0712 0%, #1A1030 50%, #0B0712 100%)" }}
     >
-      {/* Imagen de fondo con parallax suave */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: "url('/img/banner.jpg')",
-          opacity: 0.25,
-          transform: "scale(1.05)",
-        }}
-      />
-
       {/* Velo degradado inferior */}
-      <div className="absolute inset-0 bg-gradient-to-t from-negro via-transparent to-negro/60" />
+      <div className="absolute inset-0 bg-gradient-to-t from-primary via-transparent to-primary/60" />
 
       {/* Círculos decorativos de fondo */}
       <div
         className="absolute rounded-full pointer-events-none"
         style={{
           width: 600, height: 600,
-          background: "radial-gradient(circle, rgba(139,0,0,0.12) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%)",
           top: "50%", left: "50%",
           transform: "translate(-50%, -50%)",
         }}
@@ -81,23 +71,23 @@ export default function Banner() {
       >
         {/* Etiqueta superior */}
         <div className="flex items-center justify-center gap-3 mb-4">
-          <div className="h-px w-12 bg-rojo opacity-60" />
-          <p className="text-xs md:text-sm uppercase tracking-[0.4em] font-semibold" style={{ color: "#3AA8C1" }}>
+          <div className="h-px w-12 bg-accent opacity-60" />
+          <p className="text-xs md:text-sm uppercase tracking-[0.4em] font-semibold" style={{ color: "#A78BFA" }}>
             {data.subtitle}
           </p>
-          <div className="h-px w-12 bg-rojo opacity-60" />
+          <div className="h-px w-12 bg-accent opacity-60" />
         </div>
 
         {/* Título principal */}
-        <h1 className="font-serif leading-tight mb-2" style={{ fontSize: "clamp(2.5rem, 8vw, 5.5rem)" }}>
+        <h1 className="font-heading leading-tight mb-2" style={{ fontSize: "clamp(2.5rem, 8vw, 5.5rem)" }}>
           {data.title}
         </h1>
         <h1
-          className="font-serif leading-tight mb-8"
+          className="font-heading leading-tight mb-8"
           style={{
             fontSize: "clamp(2.5rem, 8vw, 5.5rem)",
-            color: "#c0392b",
-            textShadow: "0 0 40px rgba(139,0,0,0.4)",
+            color: "#A78BFA",
+            textShadow: "0 0 40px rgba(124,58,237,0.4)",
           }}
         >
           {data.highlight}
@@ -110,11 +100,11 @@ export default function Banner() {
           onMouseLeave={() => setBtnHover(false)}
           className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full uppercase tracking-widest text-sm font-bold transition-all duration-300"
           style={{
-            background: btnHover ? "#a50000" : "#8B0000",
+            background: btnHover ? "#6D28D9" : "#7C3AED",
             color: "#fff",
             boxShadow: btnHover
-              ? "0 8px 30px rgba(139,0,0,0.5)"
-              : "0 4px 16px rgba(139,0,0,0.3)",
+              ? "0 8px 30px rgba(124,58,237,0.5)"
+              : "0 4px 16px rgba(124,58,237,0.3)",
             transform: btnHover ? "scale(1.05)" : "scale(1)",
           }}
         >

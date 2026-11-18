@@ -44,7 +44,7 @@ class PromotionBase(BaseModel):
     old_price: Optional[str] = None
     unit_price: float = Field(default=0.0, ge=0)
     off: str = ""
-    color: str = "bg-rojo"
+    color: str = "bg-primary"
     img: Optional[str] = None
     sort_order: int = 0
 
@@ -103,7 +103,7 @@ class BlogPostOut(BlogPostBase):
 class CatalogCategoryBase(BaseModel):
     slug: str = Field(min_length=1, max_length=50)
     label: str = Field(min_length=1, max_length=100)
-    css_class: str = "from-rojo to-rojo-mid"
+    css_class: str = "from-primary to-secondary"
     image: Optional[str] = None
     sort_order: int = 0
 
@@ -129,8 +129,8 @@ class CatalogCategoryOut(CatalogCategoryBase):
 # ---------- PremiumSection ----------
 class PremiumSectionBase(BaseModel):
     title: str = Field(min_length=1, max_length=100)
-    icon: str = "fa-cow"
-    color: str = "bg-rojo"
+    icon: str = "fa-laptop-code"
+    color: str = "bg-primary"
     sort_order: int = 0
 
 
@@ -160,7 +160,7 @@ class PremiumCutBase(BaseModel):
     origin: Optional[str] = None
     img: Optional[str] = None
     badge: Optional[str] = None
-    badge_color: str = "bg-rojo"
+    badge_color: str = "bg-primary"
     text: Optional[str] = None
     sort_order: int = 0
 

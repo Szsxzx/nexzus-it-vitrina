@@ -16,9 +16,9 @@ interface PromoItem {
 }
 
 const colorHex: Record<string, string> = {
-  "bg-rojo":      "#8B0000",
-  "bg-negro2":    "#1a1a1a",
-  "bg-azul":      "#3AA8C1",
+  "bg-accent":      "#7C3AED",
+  "bg-primary":    "#1a1a1a",
+  "bg-secondary":      "#0B0712",
   "bg-green-700": "#15803d",
   "bg-amber-600": "#d97706",
 };
@@ -39,21 +39,21 @@ export default function Promotions() {
     setTimeout(() => setAdded(null), 1500);
   }
 
-  const hex = (color: string) => colorHex[color] ?? "#8B0000";
+  const hex = (color: string) => colorHex[color] ?? "#7C3AED";
 
   return (
-    <section id="promotions" style={{ background: "#faf9f7" }} className="py-16">
+    <section id="promotions" style={{ background: "#F8F7FB" }} className="py-16">
       <div className="container mx-auto px-4">
 
         {/* Encabezado */}
         <Reveal className="text-center mb-12">
-          <span className="inline-block text-xs font-semibold uppercase tracking-widest text-rojo mb-2">
+          <span className="inline-block text-xs font-semibold uppercase tracking-widest text-accent mb-2">
             Ofertas limitadas
           </span>
-          <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900">
+          <h2 className="text-3xl md:text-4xl font-heading font-bold text-gray-900">
             Promociones Especiales
           </h2>
-          <div className="mt-3 mx-auto w-12 h-0.5 bg-rojo rounded-full" />
+          <div className="mt-3 mx-auto w-12 h-0.5 bg-accent rounded-full" />
         </Reveal>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -102,14 +102,14 @@ export default function Promotions() {
                 <div className="relative aspect-square overflow-hidden bg-gray-100">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={p.img ?? "/img/placeholder.jpg"}
+                    src={p.img ?? "/img/placeholder.svg"}
                     alt={p.name}
                     className="w-full h-full object-cover"
                     style={{
                       transform: isHovered ? "scale(1.07)" : "scale(1)",
                       transition: "transform 0.4s ease",
                     }}
-                    onError={(e) => ((e.currentTarget.src = "/img/placeholder.jpg"))}
+                    onError={(e) => ((e.currentTarget.src = "/img/placeholder.svg"))}
                   />
                   {/* Gradiente inferior */}
                   <div

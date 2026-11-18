@@ -2,24 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --rojo: #8B0000;
-  --azul: #3AA8C1;
-  --crema: #faf8f5;
-  --negro: #0f0f0f;
-}
-
 html, body {
-  background: var(--crema);
-  color: #2a2a2a;
-  font-family: 'DM Sans', system-ui, sans-serif;
+  background: #F8F7FB;
+  color: #0B0712;
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
 
+h1, h2, h3, h4 { font-family: 'Lexend', system-ui, sans-serif; letter-spacing: -0.01em; }
+
 * { box-sizing: border-box; }
 
-/* Scroll suave */
+/* Scroll suave; deja espacio para el header fijo al saltar a anclas */
 html { scroll-behavior: smooth; }
+[id] { scroll-margin-top: 80px; }
+
+/* Foco visible consistente (accesibilidad) */
+:focus-visible { outline: 2px solid #7C3AED; outline-offset: 2px; }
 
 /* Accesibilidad: respetar "reducir movimiento" del sistema operativo.
    Anula animaciones, transiciones y el scroll suave para quienes lo piden. */

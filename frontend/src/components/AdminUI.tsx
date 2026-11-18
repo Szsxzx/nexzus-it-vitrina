@@ -25,7 +25,7 @@ export function PageHeader({
   return (
     <div className="flex items-start justify-between gap-4 mb-8">
       <div>
-        <h1 className="text-2xl font-serif font-bold text-gray-900">{title}</h1>
+        <h1 className="text-2xl font-heading font-bold text-gray-900">{title}</h1>
         {subtitle && <p className="text-sm text-gray-400 mt-0.5">{subtitle}</p>}
       </div>
       {actions && <div className="flex items-center gap-2 flex-shrink-0">{actions}</div>}
@@ -55,7 +55,7 @@ export function Card({
           {icon && (
             <span
               className="w-7 h-7 rounded-lg flex items-center justify-center text-xs"
-              style={{ background: "#8B000015", color: "#8B0000" }}
+              style={{ background: "#7C3AED15", color: "#7C3AED" }}
             >
               <i className={`fa-solid ${icon}`} />
             </span>
@@ -91,21 +91,21 @@ export function BtnPrimary({
       disabled={isDisabled}
       className="relative inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-all duration-200 select-none overflow-hidden"
       style={{
-        background: isDisabled ? "#c08080" : "#8B0000",
-        boxShadow: isDisabled ? "none" : "0 2px 8px rgba(139,0,0,0.25)",
+        background: isDisabled ? "#C4B5FD" : "#7C3AED",
+        boxShadow: isDisabled ? "none" : "0 2px 8px rgba(124,58,237,0.25)",
         cursor: isDisabled ? "not-allowed" : "pointer",
       }}
       onMouseEnter={(e) => {
         if (!isDisabled) {
-          (e.currentTarget as HTMLElement).style.background = "#a50000";
-          (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 14px rgba(139,0,0,0.35)";
+          (e.currentTarget as HTMLElement).style.background = "#6D28D9";
+          (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 14px rgba(124,58,237,0.35)";
           (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
         }
       }}
       onMouseLeave={(e) => {
         if (!isDisabled) {
-          (e.currentTarget as HTMLElement).style.background = "#8B0000";
-          (e.currentTarget as HTMLElement).style.boxShadow = "0 2px 8px rgba(139,0,0,0.25)";
+          (e.currentTarget as HTMLElement).style.background = "#7C3AED";
+          (e.currentTarget as HTMLElement).style.boxShadow = "0 2px 8px rgba(124,58,237,0.25)";
           (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
         }
       }}
@@ -254,7 +254,7 @@ export function Tr({
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLElement).style.background = "#fafafa";
         const tds = (e.currentTarget as HTMLElement).querySelectorAll("td:first-child");
-        tds.forEach((td) => ((td as HTMLElement).style.boxShadow = "inset 3px 0 0 #8B0000"));
+        tds.forEach((td) => ((td as HTMLElement).style.boxShadow = "inset 3px 0 0 #7C3AED"));
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLElement).style.background = "";
@@ -538,9 +538,9 @@ export function Modal({
         {/* Header */}
         <div
           className="flex items-center justify-between px-6 py-4 border-b border-gray-100"
-          style={{ background: "linear-gradient(135deg, #1a1a1a, #2d0000)" }}
+          style={{ background: "linear-gradient(135deg, #0B0712, #1A1030)" }}
         >
-          <h2 className="font-serif font-bold text-white text-lg">{title}</h2>
+          <h2 className="font-heading font-bold text-white text-lg">{title}</h2>
           <button
             onClick={onClose}
             className="w-8 h-8 flex items-center justify-center rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-all"

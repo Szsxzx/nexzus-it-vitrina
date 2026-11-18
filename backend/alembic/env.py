@@ -8,7 +8,7 @@ from alembic import context
 # app/models/__init__.py esta vacio (sin agregador): cada modulo de modelos se
 # importa aqui a mano para que quede registrado en Base.metadata antes de que
 # --autogenerate lo lea. Si un modulo nuevo no se importa, su tabla no se ve.
-from app.models import user, product, content  # noqa: F401
+from app.models import user, product, content, pqr  # noqa: F401
 from app.core.config import settings
 from app.core.database import Base
 

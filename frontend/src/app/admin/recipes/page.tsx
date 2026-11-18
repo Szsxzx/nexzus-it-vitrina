@@ -62,7 +62,7 @@ export default function RecipesPage() {
   }
 
   async function remove(id: number) {
-    if (!confirm("¿Eliminar esta receta?")) return;
+    if (!confirm("¿Eliminar este artículo?")) return;
     try { await api.delete(`/blog-posts/${id}`); reload(); }
     catch (e) { setErr((e as ApiError).detail); }
   }
@@ -82,13 +82,13 @@ export default function RecipesPage() {
   return (
       <PageShell>
         <PageHeader
-          title="Recetas y Artículos"
-          subtitle="Blog de consejos y recetas del sitio"
+          title="Blog y novedades"
+          subtitle="Artículos y novedades tecnológicas del sitio"
           actions={
             <div className="flex items-center gap-3">
               <SavedToast visible={saved} />
               <BtnPrimary onClick={openNew}>
-                <i className="fa-solid fa-plus text-xs" /> Nueva receta
+                <i className="fa-solid fa-plus text-xs" /> Nuevo artículo
               </BtnPrimary>
             </div>
           }
@@ -140,7 +140,7 @@ export default function RecipesPage() {
         <Modal
           open={!!editing}
           onClose={() => setEditing(null)}
-          title={isNew ? "Nueva receta" : "Editar receta"}
+          title={isNew ? "Nuevo artículo" : "Editar artículo"}
           width="max-w-2xl"
         >
           <form onSubmit={saveEditing}>
@@ -213,7 +213,7 @@ export default function RecipesPage() {
                   />
                 )}
                 <span className="text-xs text-gray-400">{editing?.date}</span>
-                <h2 className="font-serif font-bold text-xl mt-1 mb-3">{editing?.title}</h2>
+                <h2 className="font-heading font-bold text-xl mt-1 mb-3">{editing?.title}</h2>
                 <div
                   className="prose prose-sm max-w-none text-gray-700 [&_h4]:font-semibold [&_h4]:mt-4 [&_h4]:text-gray-900 [&_ul]:list-disc [&_ul]:ml-5 [&_ul]:my-2"
                   dangerouslySetInnerHTML={{ __html: editing?.content ?? "" }}

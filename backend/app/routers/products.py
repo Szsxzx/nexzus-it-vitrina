@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.deps import require_roles
 from app.models.user import UserRole
-from app.models.product import Product, Category
+from app.models.product import Product
 from app.schemas.product import ProductCreate, ProductUpdate, ProductOut
 
 
@@ -15,7 +15,7 @@ router = APIRouter(prefix="/products", tags=["products"])
 
 @router.get("", response_model=List[ProductOut])
 def list_products(
-    category: Optional[Category] = None,
+    category: Optional[str] = None,
     q: Optional[str] = Query(default=None, description="Busqueda por nombre/desc"),
     only_active: bool = True,
     db: Session = Depends(get_db),

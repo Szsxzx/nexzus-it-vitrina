@@ -28,18 +28,18 @@ export default function BlogSection() {
 
   return (
     <>
-      <section id="blog" className="py-16" style={{ background: "#faf9f7" }}>
+      <section id="blog" className="py-16" style={{ background: "#F8F7FB" }}>
         <div className="container mx-auto px-4">
 
           {/* Encabezado */}
           <Reveal className="text-center mb-12">
-            <span className="inline-block text-xs font-semibold uppercase tracking-widest text-rojo mb-2">
+            <span className="inline-block text-xs font-semibold uppercase tracking-widest text-accent mb-2">
               Del experto para ti
             </span>
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900">
-              Consejos y Recetas
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-gray-900">
+              Blog y Consejos
             </h2>
-            <div className="mt-3 mx-auto w-12 h-0.5 bg-rojo rounded-full" />
+            <div className="mt-3 mx-auto w-12 h-0.5 bg-accent rounded-full" />
           </Reveal>
 
           {/* Grid de tarjetas */}
@@ -54,17 +54,17 @@ export default function BlogSection() {
                 <div className="relative aspect-[16/9] bg-gray-100 overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={b.image ?? "/img/placeholder.jpg"}
+                    src={b.image ?? "/img/placeholder.svg"}
                     alt={b.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    onError={(e) => ((e.currentTarget.src = "/img/placeholder.jpg"))}
+                    onError={(e) => ((e.currentTarget.src = "/img/placeholder.svg"))}
                   />
                   {/* Gradiente inferior */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                   {/* Número decorativo */}
                   <span
                     className="absolute top-3 left-3 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white"
-                    style={{ background: "rgba(139,0,0,0.85)" }}
+                    style={{ background: "rgba(124,58,237,0.85)" }}
                   >
                     {String(i + 1).padStart(2, "0")}
                   </span>
@@ -75,13 +75,13 @@ export default function BlogSection() {
                   <span className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">
                     {b.date}
                   </span>
-                  <h3 className="font-serif font-bold text-gray-900 text-lg leading-snug mb-2 group-hover:text-rojo transition-colors">
+                  <h3 className="font-heading font-bold text-gray-900 text-lg leading-snug mb-2 group-hover:text-accent transition-colors">
                     {b.title}
                   </h3>
                   <p className="text-sm text-gray-500 leading-relaxed flex-1 line-clamp-2">
                     {b.excerpt}
                   </p>
-                  <div className="mt-4 flex items-center gap-1.5 text-rojo text-sm font-semibold">
+                  <div className="mt-4 flex items-center gap-1.5 text-accent text-sm font-semibold">
                     <span>Leer más</span>
                     <i className="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -108,17 +108,17 @@ export default function BlogSection() {
             <div className="relative aspect-[16/7] flex-shrink-0 bg-gray-100 overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={open.image ?? "/img/placeholder.jpg"}
+                src={open.image ?? "/img/placeholder.svg"}
                 alt={open.title}
                 className="w-full h-full object-cover"
-                onError={(e) => ((e.currentTarget.src = "/img/placeholder.jpg"))}
+                onError={(e) => ((e.currentTarget.src = "/img/placeholder.svg"))}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
               {/* Título sobre la imagen */}
               <div className="absolute bottom-0 left-0 right-0 p-5">
                 <span className="text-xs text-white/70 font-medium">{open.date}</span>
-                <h2 className="text-xl md:text-2xl font-serif font-bold text-white mt-0.5 leading-tight">
+                <h2 className="text-xl md:text-2xl font-heading font-bold text-white mt-0.5 leading-tight">
                   {open.title}
                 </h2>
               </div>
@@ -127,7 +127,7 @@ export default function BlogSection() {
               <button
                 className="absolute top-3 right-3 w-9 h-9 rounded-full flex items-center justify-center text-white transition-all"
                 style={{ background: "rgba(0,0,0,0.5)" }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "#8B0000")}
+                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "#7C3AED")}
                 onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "rgba(0,0,0,0.5)")}
                 onClick={() => setOpen(null)}
                 aria-label="Cerrar"
@@ -153,9 +153,9 @@ export default function BlogSection() {
             <div className="flex-shrink-0 border-t border-gray-100 px-6 py-4 flex justify-end">
               <button
                 className="px-5 py-2 rounded-xl text-sm font-semibold text-white transition-all"
-                style={{ background: "#8B0000" }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "#6b0000")}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "#8B0000")}
+                style={{ background: "#7C3AED" }}
+                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "#6D28D9")}
+                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "#7C3AED")}
                 onClick={() => setOpen(null)}
               >
                 Cerrar

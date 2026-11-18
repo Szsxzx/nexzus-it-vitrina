@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useCart } from "@/lib/cart";
 import { api } from "@/lib/api";
 
@@ -11,14 +12,14 @@ function InputField({ label, required, children }: { label: string; required?: b
   return (
     <div>
       <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
-        {label} {required && <span className="text-rojo">*</span>}
+        {label} {required && <span className="text-accent">*</span>}
       </label>
       {children}
     </div>
   );
 }
 
-const inputClass = "w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-rojo focus:ring-2 focus:ring-rojo/10 transition-all";
+const inputClass = "w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/10 transition-all";
 
 export default function WhatsAppCart() {
   const { items, count, inc, dec, clear } = useCart();
@@ -30,7 +31,7 @@ export default function WhatsAppCart() {
   const [phone, setPhone]       = useState("");
   const [notes, setNotes]       = useState("");
   const [btnHover, setBtnHover] = useState(false);
-  const [wppNumber, setWppNumber] = useState("573164013230");
+  const [wppNumber, setWppNumber] = useState("573000000000");
 
   useEffect(() => {
     api.get<{ footer_whatsapp_number: string }>("/settings")
@@ -41,11 +42,11 @@ export default function WhatsAppCart() {
   const total = items.reduce((s, i) => s + i.unitPrice * i.qty, 0);
 
   function buildMessage(customerName: string): string {
-    let m = `¡Hola! Soy ${customerName} y quiero hacer el siguiente pedido 🥩\n\n`;
+    let m = `¡Hola! Soy ${customerName} y quiero hacer el siguiente pedido.\n\n`;
     items.forEach((i) => (m += `• ${i.name} — ${i.price} (x${i.qty})\n`));
     m += `\nTotal estimado: ${fmtCOP.format(total)}`;
     if (notes) m += `\n\nNotas: ${notes}`;
-    m += "\n\n¿Me pueden confirmar disponibilidad? 😊";
+    m += "\n\n¿Me pueden confirmar disponibilidad?";
     return m;
   }
 
@@ -90,7 +91,7 @@ export default function WhatsAppCart() {
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 flex-shrink-0"
-          style={{ background: "linear-gradient(135deg, #1a1a1a, #2d0000)" }}
+          style={{ background: "linear-gradient(135deg, #1a1a1a, #1A1030)" }}
         >
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
@@ -125,8 +126,8 @@ export default function WhatsAppCart() {
                 <ul className="divide-y divide-gray-50 px-3 py-2">
                   {items.map((it, idx) => (
                     <li key={`${it.name}-${idx}`} className="flex items-center gap-3 py-3">
-                      <div className="w-8 h-8 rounded-lg bg-rojo/10 flex items-center justify-center flex-shrink-0">
-                        <i className="fa-solid fa-drumstick-bite text-rojo text-xs" />
+                      <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+                        <i className="fa-solid fa-box text-accent text-xs" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-800 truncate">{it.name}</p>
@@ -135,13 +136,13 @@ export default function WhatsAppCart() {
                       <div className="flex items-center gap-1.5 flex-shrink-0">
                         <button
                           onClick={() => dec(idx)}
-                          className="w-6 h-6 rounded-lg flex items-center justify-center text-gray-500 hover:bg-rojo hover:text-white transition-all text-sm font-bold"
+                          className="w-6 h-6 rounded-lg flex items-center justify-center text-gray-500 hover:bg-accent hover:text-white transition-all text-sm font-bold"
                           style={{ background: "#f5f5f5" }}
                         >−</button>
                         <span className="w-5 text-center text-sm font-semibold text-gray-700">{it.qty}</span>
                         <button
                           onClick={() => inc(idx)}
-                          className="w-6 h-6 rounded-lg flex items-center justify-center text-gray-500 hover:bg-rojo hover:text-white transition-all text-sm font-bold"
+                          className="w-6 h-6 rounded-lg flex items-center justify-center text-gray-500 hover:bg-accent hover:text-white transition-all text-sm font-bold"
                           style={{ background: "#f5f5f5" }}
                         >+</button>
                       </div>
@@ -158,6 +159,15 @@ export default function WhatsAppCart() {
                   <span className="text-sm text-gray-500">Total estimado</span>
                   <span className="text-lg font-bold text-gray-900">{fmtCOP.format(total)}</span>
                 </div>
+                <Link
+                  href="/checkout"
+                  className="w-full py-3 rounded-xl text-white text-sm font-bold flex items-center justify-center gap-2 transition-all"
+                  style={{ background: "#7C3AED" }}
+                  onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "#6D28D9")}
+                  onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "#7C3AED")}
+                >
+                  <i className="fa-solid fa-lock text-sm" /> Pagar en línea (PSE, tarjetas, Nequi)
+                </Link>
                 <button
                   onClick={() => setShowForm(true)}
                   className="w-full py-3 rounded-xl text-white text-sm font-bold flex items-center justify-center gap-2 transition-all"
@@ -169,7 +179,7 @@ export default function WhatsAppCart() {
                 </button>
                 <button
                   onClick={clear}
-                  className="w-full py-1.5 text-xs text-gray-400 hover:text-rojo transition-colors"
+                  className="w-full py-1.5 text-xs text-gray-400 hover:text-accent transition-colors"
                 >
                   Vaciar carrito
                 </button>
@@ -226,7 +236,7 @@ export default function WhatsAppCart() {
                 </div>
               </div>
 
-              {formErr && <p className="text-xs text-rojo">{formErr}</p>}
+              {formErr && <p className="text-xs text-accent">{formErr}</p>}
             </div>
 
             <div className="flex-shrink-0 border-t border-gray-100 p-4">
@@ -266,7 +276,7 @@ export default function WhatsAppCart() {
         {count > 0 && (
           <span
             className="absolute -top-1.5 -right-1.5 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold"
-            style={{ background: "#8B0000", boxShadow: "0 2px 6px rgba(139,0,0,0.4)" }}
+            style={{ background: "#7C3AED", boxShadow: "0 2px 6px rgba(124,58,237,0.4)" }}
           >
             {count}
           </span>

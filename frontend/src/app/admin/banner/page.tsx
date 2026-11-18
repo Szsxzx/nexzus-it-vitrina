@@ -17,9 +17,9 @@ interface BannerData {
 }
 
 const defaultBanner: BannerData = {
-  subtitle: "La mejor carne de la ciudad",
-  title: "100% Natural",
-  highlight: "Carne Premium",
+  subtitle: "Tienda NEXZUS",
+  title: "Tecnología para su empresa",
+  highlight: "Software y hardware con garantía",
   ctaText: "Ver catálogo",
   ctaHref: "#products",
 };
@@ -97,21 +97,21 @@ export default function BannerPage() {
                 <Input
                   value={form.subtitle}
                   onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
-                  placeholder="La mejor carne de la ciudad"
+                  placeholder="Tienda NEXZUS"
                 />
               </Field>
               <Field label="Título principal">
                 <Input
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  placeholder="100% Natural"
+                  placeholder="Tecnología para su empresa"
                 />
               </Field>
-              <Field label="Texto destacado" hint="Segunda línea, aparece en color rojo">
+              <Field label="Texto destacado" hint="Texto de apoyo bajo el título">
                 <Input
                   value={form.highlight}
                   onChange={(e) => setForm({ ...form, highlight: e.target.value })}
-                  placeholder="Carne Premium"
+                  placeholder="Software y hardware con garantía"
                 />
               </Field>
               <div className="grid grid-cols-2 gap-3">
@@ -147,21 +147,21 @@ export default function BannerPage() {
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Vista previa</p>
             <div
               className="relative rounded-2xl overflow-hidden flex items-center justify-center text-white text-center p-10 min-h-[280px]"
-              style={{ background: "linear-gradient(135deg, #0f0f0f 0%, rgba(139,0,0,0.35) 50%, #0f0f0f 100%)" }}
+              style={{ background: "linear-gradient(135deg, #0B0712 0%, rgba(124,58,237,0.35) 50%, #0B0712 100%)" }}
             >
               <div className="relative z-10">
-                <p className="text-[11px] uppercase tracking-[0.4em] font-medium" style={{ color: "#3AA8C1" }}>
+                <p className="text-[11px] uppercase tracking-[0.4em] font-medium" style={{ color: "#7C3AED" }}>
                   {form.subtitle || "—"}
                 </p>
-                <h2 className="font-serif text-3xl mt-2 leading-tight text-white">
+                <h2 className="font-heading text-3xl mt-2 leading-tight text-white">
                   {form.title || "—"}
                 </h2>
-                <h2 className="font-serif text-3xl leading-tight" style={{ color: "#c0392b" }}>
+                <h2 className="font-heading text-3xl leading-tight" style={{ color: "#A78BFA" }}>
                   {form.highlight || "—"}
                 </h2>
                 <span
                   className="inline-block mt-5 px-6 py-2.5 rounded-full text-sm font-semibold text-white"
-                  style={{ background: "#8B0000" }}
+                  style={{ background: "#7C3AED" }}
                 >
                   {form.ctaText || "—"}
                 </span>

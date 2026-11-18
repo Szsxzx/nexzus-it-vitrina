@@ -1,5 +1,5 @@
-# ─── Render.com — INCODOL Backend (FastAPI) ───────────────────────────────────
-# Sube este archivo a Bitbucket y conecta el repo en render.com
+# ─── Render.com — NEXZUS IT SERVICE Backend (FastAPI) ─────────────────────────
+# Conecta el repo en render.com; este blueprint crea el servicio web.
 
 services:
   - type: web
@@ -7,7 +7,9 @@ services:
     runtime: python
     rootDir: backend
     buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    # Las migraciones corren en cada arranque: el seed de app/main.py asume que el
+    # esquema ya existe (columnas de pago en orders, tabla pqrs, etc.).
+    startCommand: alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT
     # Disco persistente: sin esto, cada redeploy borra incodol.db (Render no
     # conserva el filesystem de un "web service" entre despliegues) y con eso
     # se pierde todo lo que se haya subido desde el panel.
@@ -28,3 +30,24 @@ services:
         value: sqlite:////var/data/incodol.db   # Cambiar por PostgreSQL en produccion
       - key: CORS_ORIGINS
         value: https://vitrina-vs15.netlify.app
+      - key: APP_NAME
+        value: NEXZUS IT SERVICE API
+      - key: ENV
+        value: production
+      - key: DEBUG
+        value: "false"
+      # URL pública del frontend: Wompi redirige a {PUBLIC_SITE_URL}/checkout/resultado
+      - key: PUBLIC_SITE_URL
+        value: https://vitrina-vs15.netlify.app
+      # ── Wompi ── sandbox | production. Las llaves se cargan a mano en el
+      # dashboard de Render (sync: false = no se versionan aquí).
+      - key: WOMPI_ENV
+        value: sandbox
+      - key: WOMPI_PUBLIC_KEY
+        sync: false
+      - key: WOMPI_PRIVATE_KEY
+        sync: false
+      - key: WOMPI_INTEGRITY_SECRET
+        sync: false
+      - key: WOMPI_EVENTS_SECRET
+        sync: false

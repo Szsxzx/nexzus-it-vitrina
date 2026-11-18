@@ -24,22 +24,21 @@ interface PromoItem {
 }
 
 const COLOR_OPTIONS = [
-  { value: "bg-rojo",      label: "🔴 Rojo" },
-  { value: "bg-negro2",    label: "⚫ Negro" },
-  { value: "bg-azul",      label: "🔵 Azul" },
-  { value: "bg-green-700", label: "🟢 Verde" },
-  { value: "bg-amber-600", label: "🟡 Ámbar" },
+  { value: "bg-primary",   label: "Negro de marca" },
+  { value: "bg-secondary", label: "Morado oscuro" },
+  { value: "bg-accent",    label: "Morado" },
+  { value: "bg-success",   label: "Verde" },
+  { value: "bg-warning",   label: "Ãmbar" },
 ];
 
 const colorHex: Record<string, string> = {
-  "bg-rojo": "#8B0000", "bg-negro2": "#1a1a1a",
-  "bg-azul": "#3AA8C1", "bg-green-700": "#15803d",
-  "bg-amber-600": "#d97706",
+  "bg-primary": "#0B0712", "bg-secondary": "#1A1030", "bg-accent": "#7C3AED",
+  "bg-success": "#15803D", "bg-warning": "#B45309",
 };
 
 type EditingPromo = Partial<PromoItem> & { name: string; price: string; off: string; color: string };
 
-const emptyPromo = (): EditingPromo => ({ name: "", price: "", old_price: "", off: "", color: "bg-rojo", img: "" });
+const emptyPromo = (): EditingPromo => ({ name: "", price: "", old_price: "", off: "", color: "bg-accent", img: "" });
 
 export default function PromotionsPage() {
   const { user, logout } = useAdminAuth();
@@ -94,7 +93,7 @@ export default function PromotionsPage() {
   return (
       <PageShell>
         <PageHeader
-          title="Promociones"
+          title="Ofertas"
           subtitle="Ofertas especiales del sitio"
           actions={
             <div className="flex items-center gap-3">
@@ -128,7 +127,7 @@ export default function PromotionsPage() {
                 <Td>
                   <span
                     className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold text-white"
-                    style={{ background: colorHex[p.color] ?? "#8B0000" }}
+                    style={{ background: colorHex[p.color] ?? "#7C3AED" }}
                   >
                     {p.off}
                   </span>
@@ -136,7 +135,7 @@ export default function PromotionsPage() {
                 <Td>
                   <span
                     className="inline-block w-5 h-5 rounded-lg border border-black/10"
-                    style={{ background: colorHex[p.color] ?? "#8B0000" }}
+                    style={{ background: colorHex[p.color] ?? "#7C3AED" }}
                   />
                 </Td>
                 <Td>
@@ -166,7 +165,7 @@ export default function PromotionsPage() {
                 <div key={p.id} className="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm">
                   <div
                     className="px-3 py-2.5 flex items-center justify-between"
-                    style={{ background: colorHex[p.color] ?? "#8B0000" }}
+                    style={{ background: colorHex[p.color] ?? "#7C3AED" }}
                   >
                     <span className="text-white text-xs font-semibold truncate">{p.name}</span>
                     <span className="text-[10px] text-white/80 ml-1 flex-shrink-0">{p.off}</span>
@@ -202,7 +201,7 @@ export default function PromotionsPage() {
                   <Input value={editing?.off ?? ""} onChange={(e) => setEditing({ ...editing!, off: e.target.value })} placeholder="36% OFF" required />
                 </Field>
                 <Field label="Color de tarjeta">
-                  <Select value={editing?.color ?? "bg-rojo"} onChange={(e) => setEditing({ ...editing!, color: e.target.value })}>
+                  <Select value={editing?.color ?? "bg-accent"} onChange={(e) => setEditing({ ...editing!, color: e.target.value })}>
                     {COLOR_OPTIONS.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
                   </Select>
                 </Field>

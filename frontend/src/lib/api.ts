@@ -4,7 +4,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
 export type ApiError = { status: number; detail: string; isNetwork?: boolean };
 
-export const TOKEN_KEY = "incodol_token";
+export const TOKEN_KEY = "nexzus_token";
 export function saveToken(t: string) { if (typeof window !== "undefined") localStorage.setItem(TOKEN_KEY, t); }
 export function loadToken(): string | null {
   return typeof window === "undefined" ? null : localStorage.getItem(TOKEN_KEY);
