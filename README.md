@@ -1,5 +1,5 @@
 
-<img width="1914" height="929" alt="image" src="https://github.com/user-attachments/assets/99d3f623-ca48-4d45-85fc-4c5f9273f350" />
+<img width="1901" height="946" alt="image" src="https://github.com/user-attachments/assets/72a31083-89f2-4377-ace9-d18d62e6b1ce" />
 
 
 # Carnicería Fuente de Vida / Vitrina
